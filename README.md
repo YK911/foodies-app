@@ -249,3 +249,4 @@ npm run dev
 | cd backend && npx prisma migrate dev | Застосувати міграції до PostgreSQL       |
 | cd frontend && npm run build         | Зібрати фронтенд у папку dist            |
 | cd frontend && npm run deploy        | Опублікувати фронтенд на GitHub Pages    |
+
