@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
+  type PersistConfig,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -10,25 +11,10 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import authReducer, { type AuthState } from './auth/authSlice';
+import metaReducer from './meta/metaSlice';
 
-const authInitialState = {
-  user: null,
-  token: null as string | null,
-  isLoggedIn: false,
-};
-
-const authReducer = (state = authInitialState, action: { type: string; payload?: unknown }) => {
-  switch (action.type) {
-    case 'auth/setCredentials':
-      return { ...state, ...(action.payload as object), isLoggedIn: true };
-    case 'auth/logOut':
-      return authInitialState;
-    default:
-      return state;
-  }
-};
-
-const authPersistConfig = {
+const authPersistConfig: PersistConfig<AuthState> = {
   key: 'auth',
   storage,
   whitelist: ['token'],
@@ -36,6 +22,7 @@ const authPersistConfig = {
 
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
+  meta: metaReducer,
 });
 
 export const store = configureStore({
