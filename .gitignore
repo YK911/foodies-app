@@ -35,3 +35,6 @@ pnpm-debug.log*
 
 # Завантажені локальні файли
 uploads/
+
+# Файли наповнення DB
+backend/prisma/data
