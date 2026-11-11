@@ -9,7 +9,7 @@ build/
 .cache/
 *.tsbuildinfo
 
-# Змінні оточення (секрети ніколи не комітяться)
+# Змінні оточення
 .env
 .env.local
 .env.development.local
@@ -25,6 +25,7 @@ pnpm-debug.log*
 # Редактори та ОС
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea/
 .DS_Store
 *.suo
