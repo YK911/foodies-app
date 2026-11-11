@@ -1,0 +1,24 @@
+{
+  "name": "foodies-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fullstack Foodies application (React + Node.js/Express + Prisma + PostgreSQL + TypeScript)",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend start",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
+    "type-check": "npm --prefix backend run type-check && npm --prefix frontend run type-check"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "express",
+    "prisma",
+    "postgresql",
+    "redux"
+  ],
+  "author": "Foodies Team",
+  "license": "ISC"
+}
