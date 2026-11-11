@@ -9,7 +9,7 @@
 
 1. [Вимоги до оточення](#requirements)
 2. [Структура монорепозиторію](#structure)
-3. [Швидкий старт для нових розробників](#start)
+3. [Швидкий старт](#start)
 4. [Робота з базою даних (Prisma & PostgreSQL)](#db-settings)
 5. [Git Workflow та правила команди](#git-workflow)
 6. [Документація API (Swagger)](#swagger)
@@ -24,12 +24,13 @@
 - Git для контролю версій.
 
 <a id="structure"></a>
-## 📁 Структура монорепозиторію
+## Структура монорепозиторію
 ```text
 foodies-app/
 ├── .github/
 │   └── workflows/
-│       ├── deploy-frontend.yml      # Автодеплой Vite-додатка на GitHub Pages
+│       ├── deploy-frontend.yml      # Deploy Frontend to GitHub Pages
+│       ├── deploy-backend.yml       # Deploy Backend to Render
 │       └── ci.yml                   # Перевірка TypeScript та лінтингу в PR
 ├── backend/                         # Серверна частина
 │   ├── docs/
@@ -92,12 +93,12 @@ foodies-app/
 ```
 
 <a id="start"></a>
-## 🚀 Швидкий старт для нових розробників
+## Швидкий старт
 
 ### Крок 1. Клонування репозиторію
 ```bash
-git clone https://github.com/<ваша-організація-або-юзер>/<назва-репозиторію>.git
-cd <назва-репозиторію>
+git clone https://github.com/YK911/foodies-app.git
+cd foodies-app
 ```
 
 ### Крок 2. Налаштування файлів `.env`
