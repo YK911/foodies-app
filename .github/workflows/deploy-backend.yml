@@ -2,7 +2,7 @@ name: Deploy Backend to Render
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - 'backend/**'
       - '.github/workflows/deploy-backend.yml'
@@ -14,6 +14,11 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
+
+    # Передаємо змінні середовища для всього джоба
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy' }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL || 'postgresql://dummy:dummy@localhost:5432/dummy' }}
 
     steps:
       - name: Checkout repository
@@ -42,7 +47,7 @@ jobs:
         if: success()
         run: |
           if [ -z "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
-            echo "⚠️ Секрет RENDER_DEPLOY_HOOK_URL не встановлено. Якщо на Render увімкнено Auto-Deploy через GitHub, сервіс оновить код автоматично."
+            echo "⚠️ Секрет RENDER_DEPLOY_HOOK_URL не встановлено. Render виконає оновлення самостійно через Auto-Deploy."
           else
             echo "🚀 Відправка запиту на оновлення сервера в Render..."
             curl -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"

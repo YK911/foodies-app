@@ -2,7 +2,7 @@ name: CI Quality Gate
 
 on:
   pull_request:
-    branches: [ dev, main ]
+    branches: [dev, main]
 
 jobs:
   check-backend:
@@ -11,6 +11,9 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy' }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL || 'postgresql://dummy:dummy@localhost:5432/dummy' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
