@@ -1,4 +1,4 @@
-# GET /api/categories (BE-05)
+# GET /api/categories
 tags:
   - Categories
 summary: Get all recipe categories

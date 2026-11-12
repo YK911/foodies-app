@@ -1,4 +1,4 @@
-# GET /api/ingredients (BE-05)
+# GET /api/ingredients
 tags:
   - Ingredients
 summary: Get all ingredients

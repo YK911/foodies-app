@@ -1,4 +1,4 @@
-# GET /api/testimonials (BE-05)
+# GET /api/testimonials
 tags:
   - Testimonials
 summary: Get testimonials for the home page slider

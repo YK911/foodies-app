@@ -27,7 +27,7 @@ export const createApp = (): Application => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
-  // BE-05: public lookup endpoints
+  // Public lookup endpoints
   app.use('/api/categories', categoriesRouter);
   app.use('/api/areas', areasRouter);
   app.use('/api/ingredients', ingredientsRouter);

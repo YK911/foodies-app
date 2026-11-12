@@ -1,4 +1,4 @@
-# GET /api/areas (BE-05)
+# GET /api/areas
 tags:
   - Areas
 summary: Get all areas (cuisines)
