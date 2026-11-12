@@ -4,12 +4,51 @@ info:
   version: 1.0.0
   description: API documentation for Foodies full-stack platform
 servers:
-  - url: http://localhost:5000/api
+  - url: /api
+    description: Current server
+  - url: http://localhost:5001/api
     description: Local development server
+tags:
+  - name: System
+    description: Service health and status
+  - name: Authentication
+    description: Registration, sign-in, and session management
+  - name: Recipes
+    description: Recipe discovery and management
+  - name: Users
+    description: User profiles and subscriptions
+  - name: Categories
+    description: Recipe categories
+  - name: Areas
+    description: Recipe regions
+  - name: Ingredients
+    description: Recipe ingredients
+  - name: Testimonials
+    description: User testimonials
 paths:
   /health:
     get:
-      summary: Health check endpoint
+      tags:
+        - System
+      summary: Check API availability
+      operationId: getHealth
       responses:
         '200':
-          description: Server is healthy
+          description: API is available
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - timestamp
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+components:
+  schemas: {}
+  responses: {}
