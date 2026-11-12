@@ -1,0 +1,18 @@
+# GET /api/areas
+tags:
+  - Areas
+summary: Get all areas (cuisines)
+description: Public endpoint, no authorization required.
+operationId: getAreas
+security: []
+responses:
+  '200':
+    description: Areas sorted by name
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../components/schemas/Area.yaml'
+  '500':
+    description: Internal Server Error
