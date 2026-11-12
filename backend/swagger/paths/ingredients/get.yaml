@@ -1,0 +1,18 @@
+# GET /api/ingredients (BE-05)
+tags:
+  - Ingredients
+summary: Get all ingredients
+description: Public endpoint, no authorization required.
+operationId: getIngredients
+security: []
+responses:
+  '200':
+    description: Ingredients sorted by name (not paginated)
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../components/schemas/Ingredient.yaml'
+  '500':
+    description: Internal Server Error
