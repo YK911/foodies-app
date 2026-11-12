@@ -116,11 +116,12 @@ cd foodies-app
 cp backend/.env.template backend/.env
 ```
 
-Відкрийте `backend/.env` та вставте спільний `DATABASE_URL`, наприклад:
+Відкрийте `backend/.env` та вставте `DATABASE_URL` та `DIRECT_URL`, наприклад:
 
 ```env
-PORT=5000
-DATABASE_URL="postgresql://username:password@ep-xyz.aws.neon.tech/foodies_db?sslmode=require"
+PORT=5001
+DATABASE_URL="postgresql://postgres.[PROJECT_REF]:[YOUR_PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.[PROJECT_REF]:[YOUR_PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
 JWT_SECRET="foodies_super_secret_jwt_key_2026"
 JWT_EXPIRES_IN="7d"
 ```
@@ -134,7 +135,7 @@ cp frontend/.env.template frontend/.env
 Вміст `frontend/.env`:
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5001/api
 ```
 
 ### Крок 3. Встановлення пакетів
@@ -162,8 +163,8 @@ npx prisma migrate dev
 npm run dev
 ```
 
-- Сервер буде доступний за адресою: `http://localhost:5000`
-- Документація Swagger UI: `http://localhost:5000/api-docs`
+- Сервер буде доступний за адресою: `http://localhost:5001`
+- Документація Swagger UI: `http://localhost:5001/api-docs`
 
 ### Крок 5. Запуск фронтенду
 
@@ -235,7 +236,7 @@ npm run dev
 
 - Роути додаються окремими файлами у відповідні папки [backend/swagger/paths/<сутності>/<метод>.yaml](backend/swagger/paths/).
 - Загальні моделі описуються в [backend/swagger/components/schemas/](backend/swagger/components/schemas/).
-- Перевірити документацію локально: `http://localhost:5000/api-docs`.
+- Перевірити документацію локально: `http://localhost:5001/api-docs`.
 
 <a id="#commands"></a>
 
