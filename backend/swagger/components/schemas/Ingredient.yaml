@@ -1,0 +1,17 @@
+type: object
+required: [id, name, desc, img]
+properties:
+  id:
+    type: string
+    description: ObjectId for seeded rows, UUID for rows created later
+    example: 640c2dd963a319ea671e37aa
+  name:
+    type: string
+    example: Squid
+  desc:
+    type: [string, 'null']
+    example: A type of cephalopod with a soft, cylindrical body and long tentacles.
+  img:
+    type: [string, 'null']
+    format: uri
+    example: https://ftp.goit.study/img/so-yummy/ingredients/640c2dd963a319ea671e37aa.png
