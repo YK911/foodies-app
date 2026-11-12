@@ -18,7 +18,7 @@ import metaReducer from './meta/metaSlice';
 const authPersistConfig: PersistConfig<AuthState> = {
   key: 'auth',
   storage,
-  whitelist: ['token'],
+  whitelist: ['token', 'user'],
 };
 
 const rootReducer = combineReducers({

@@ -17,7 +17,7 @@ export interface AuthState {
 }
 
 interface CredentialsPayload {
-  user: AuthUser | null;
+  user: AuthUser;
   token: string;
 }
 
@@ -65,8 +65,11 @@ const authSlice = createSlice({
       }
 
       const token = rehydrateAction.payload?.token ?? null;
+      const user = rehydrateAction.payload?.user ?? null;
+
       state.token = token;
-      state.isAuth = Boolean(token);
+      state.user = user;
+      state.isAuth = Boolean(token && user);
     });
   },
 });
