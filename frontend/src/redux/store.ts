@@ -11,6 +11,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { setApiTokenProvider } from '../services/api';
 import authReducer, { type AuthState } from './auth/authSlice';
 import metaReducer from './meta/metaSlice';
 
@@ -36,6 +37,8 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+setApiTokenProvider(() => store.getState().auth.token);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
