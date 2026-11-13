@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import { loginUser, registerUser } from '../services/authService.js';
+import createHttpError from 'http-errors';
+import { loginUser, logoutUser, registerUser } from '../services/authService.js';
 import type { LoginInput, RegisterInput } from '../validation/authSchemas.js';
 
 export const register = async (
@@ -21,6 +22,19 @@ export const login = async (
 ): Promise<void> => {
   try {
     res.status(200).json(await loginUser(req.body));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    if (!req.sessionId) {
+      throw createHttpError(401, 'Authentication is required');
+    }
+
+    await logoutUser(req.sessionId);
+    res.status(204).send();
   } catch (error) {
     next(error);
   }

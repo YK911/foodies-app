@@ -89,3 +89,9 @@ export const loginUser = async (input: LoginInput): Promise<AuthResult> => {
 
   return { user: authUser, token };
 };
+
+export const logoutUser = async (sessionId: string): Promise<void> => {
+  await prisma.session.deleteMany({
+    where: { id: sessionId },
+  });
+};

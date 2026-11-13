@@ -1,11 +1,16 @@
 import { randomUUID } from 'node:crypto';
 import createHttpError from 'http-errors';
-import jwt, { type JwtPayload, type SignOptions } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, type JwtPayload, type SignOptions } from 'jsonwebtoken';
 
 interface SessionToken {
   sessionId: string;
   token: string;
   expiresAt: Date;
+}
+
+interface VerifiedSessionToken {
+  userId: string;
+  sessionId: string;
 }
 
 const getJwtSecret = (): string => {
@@ -22,6 +27,7 @@ export const createSessionToken = (userId: string): SessionToken => {
   const sessionId = randomUUID();
   const expiresIn = (process.env.JWT_EXPIRES_IN || '7d') as SignOptions['expiresIn'];
   const token = jwt.sign({ sessionId }, getJwtSecret(), {
+    algorithm: 'HS256',
     subject: userId,
     expiresIn,
   });
@@ -36,4 +42,31 @@ export const createSessionToken = (userId: string): SessionToken => {
     token,
     expiresAt: new Date(payload.exp * 1000),
   };
+};
+
+export const verifySessionToken = (token: string): VerifiedSessionToken => {
+  try {
+    const payload = jwt.verify(token, getJwtSecret(), {
+      algorithms: ['HS256'],
+    });
+
+    if (
+      typeof payload === 'string' ||
+      typeof payload.sub !== 'string' ||
+      typeof payload.sessionId !== 'string'
+    ) {
+      throw createHttpError(401, 'Invalid or expired token');
+    }
+
+    return {
+      userId: payload.sub,
+      sessionId: payload.sessionId,
+    };
+  } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      throw createHttpError(401, 'Invalid or expired token');
+    }
+
+    throw error;
+  }
 };
