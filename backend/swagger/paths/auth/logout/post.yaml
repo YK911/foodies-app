@@ -1,0 +1,14 @@
+tags:
+  - Authentication
+summary: Log out the current session
+description: Deletes the active server session associated with the Bearer token.
+operationId: logoutUser
+security:
+  - bearerAuth: []
+responses:
+  '204':
+    description: Session deleted
+  '401':
+    $ref: '#/components/responses/401'
+  '500':
+    $ref: '#/components/responses/500'

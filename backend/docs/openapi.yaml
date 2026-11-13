@@ -50,5 +50,10 @@ paths:
                     type: string
                     format: date-time
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas: {}
   responses: {}
