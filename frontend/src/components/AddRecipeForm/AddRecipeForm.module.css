@@ -1,0 +1,689 @@
+/* Layout */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.fieldsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  width: 100%;
+}
+
+.ingredientsPart {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 32px;
+}
+
+.nameBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.selects {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.categoryTimeRow,
+.ingredientRow {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.controlWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.finish {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.preparation {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Typography */
+
+.label {
+  display: block;
+  color: var(--color-main);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.02em;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Photo */
+
+.photoColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 318px;
+  border: 1px dashed var(--color-grey);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.dropzone:hover,
+.visuallyHidden:focus-visible + .dropzone {
+  border-color: var(--color-main);
+}
+
+.dropzoneInvalid,
+.dropzoneInvalid:hover {
+  border-color: var(--color-error);
+}
+
+.uploadIcon {
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+
+.cameraIcon {
+  position: absolute;
+  top: 15.625px;
+  left: 15.625px;
+}
+
+.uploadLink {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-main);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  text-decoration: underline;
+  text-underline-position: from-font;
+  cursor: pointer;
+}
+
+.photoPreview {
+  display: block;
+  width: 100%;
+  height: 318px;
+  border-radius: 30px;
+  object-fit: cover;
+}
+
+/* Text fields */
+
+.titleInput {
+  width: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-main);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.titleInput::placeholder {
+  color: var(--color-grey);
+  opacity: 1;
+}
+
+.titleInputInvalid::placeholder {
+  color: var(--color-error);
+}
+
+.underlined {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-grey);
+  transition: border-color 0.2s ease;
+}
+
+.underlined:focus-within {
+  border-bottom-color: var(--color-main);
+}
+
+.underlinedInvalid,
+.underlinedInvalid:focus-within {
+  border-bottom-color: var(--color-error);
+}
+
+.textarea,
+.textInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-dark);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+}
+
+.textarea {
+  display: block;
+  overflow: hidden;
+  resize: none;
+}
+
+.textInput {
+  color: var(--color-main);
+}
+
+.textarea::placeholder,
+.textInput::placeholder {
+  color: var(--color-grey);
+  opacity: 1;
+}
+
+.charCounter {
+  flex-shrink: 0;
+  color: var(--color-grey);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+}
+
+.charCounterCurrent {
+  color: var(--color-main);
+}
+
+.underlinedInvalid .textarea,
+.underlinedInvalid .textInput,
+.underlinedInvalid .charCounter,
+.underlinedInvalid .charCounterCurrent,
+.underlinedInvalid .textarea::placeholder,
+.underlinedInvalid .textInput::placeholder {
+  color: var(--color-error);
+}
+
+/* Cooking time counter */
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--color-grey);
+  border-radius: 30px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.iconButton:hover:not(:disabled),
+.iconButton:focus-visible {
+  outline: none;
+  border-color: var(--color-main);
+}
+
+.iconButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.counterIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.counterValue {
+  min-width: 48px;
+  color: var(--color-main);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.muted {
+  color: var(--color-grey);
+}
+
+/* Ingredients */
+
+.outlineButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border: 1px solid var(--color-grey);
+  border-radius: 30px;
+  background: transparent;
+  color: var(--color-main);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.outlineButton:hover,
+.outlineButton:focus-visible {
+  outline: none;
+  border-color: var(--color-main);
+  background-color: var(--color-main);
+  color: var(--color-white);
+}
+
+.buttonIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.buttonIcon path,
+.trashIcon path {
+  stroke: currentColor;
+}
+
+.ingredientList {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: stretch;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ingredientCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 155px;
+}
+
+.ingredientImageBox {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  border: 1px solid var(--color-grey);
+  border-radius: 15px;
+}
+
+.ingredientImage {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+}
+
+.ingredientText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ingredientName,
+.ingredientMeasure {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+}
+
+.ingredientName {
+  color: var(--color-main);
+}
+
+.ingredientMeasure {
+  color: var(--color-grey);
+}
+
+.removeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.removeButton:hover,
+.removeButton:focus-visible {
+  opacity: 0.6;
+}
+
+/* Actions */
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--color-grey);
+  border-radius: 30px;
+  background: transparent;
+  color: var(--color-dark);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.deleteButton:hover:not(:disabled),
+.deleteButton:focus-visible {
+  outline: none;
+  border-color: var(--color-main);
+  background-color: var(--color-main);
+  color: var(--color-white);
+}
+
+.publishButton {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 30px;
+  background-color: var(--color-dark);
+  color: var(--color-white);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.publishButton:hover:not(:disabled),
+.publishButton:focus-visible {
+  outline: none;
+  background-color: var(--color-main);
+}
+
+.deleteButton:disabled,
+.publishButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Tablet */
+
+@media screen and (min-width: 768px) {
+  .form {
+    gap: 80px;
+  }
+
+  .fieldsColumn {
+    gap: 80px;
+    max-width: 649px;
+  }
+
+  .ingredientsPart {
+    gap: 40px;
+  }
+
+  .details {
+    gap: 60px;
+  }
+
+  .nameBlock {
+    gap: 40px;
+  }
+
+  .selects {
+    gap: 60px;
+  }
+
+  .categoryTimeRow,
+  .ingredientRow {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .field {
+    gap: 16px;
+  }
+
+  .categoryField,
+  .ingredientField {
+    flex-shrink: 0;
+    width: 315px;
+  }
+
+  .areaField {
+    width: 330px;
+  }
+
+  /* Lines the quantity up with the ingredient select under its label. */
+  .measureField {
+    flex: 1;
+    margin-top: 56px;
+  }
+
+  .finish {
+    gap: 80px;
+  }
+
+  .preparation {
+    gap: 40px;
+  }
+
+  .label {
+    font-size: 20px;
+  }
+
+  .photoColumn {
+    gap: 20px;
+  }
+
+  .dropzone,
+  .photoPreview {
+    height: 400px;
+  }
+
+  .uploadLink {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .titleInput {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .underlined {
+    gap: 47px;
+  }
+
+  .textarea,
+  .textInput,
+  .charCounter {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .counter {
+    gap: 16px;
+  }
+
+  .iconButton {
+    width: 56px;
+    height: 56px;
+  }
+
+  .counterIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .counterValue {
+    min-width: 50px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .outlineButton {
+    padding: 16px 32px;
+    border-color: var(--color-dark);
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .buttonIcon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ingredientList {
+    gap: 20px 28px;
+  }
+
+  .ingredientCard {
+    gap: 14px;
+    width: 178px;
+  }
+
+  .ingredientImageBox {
+    width: 90px;
+    height: 90px;
+  }
+
+  .ingredientImage {
+    width: 60px;
+    height: 60px;
+  }
+
+  .ingredientText {
+    gap: 4px;
+  }
+
+  .ingredientName,
+  .ingredientMeasure {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .deleteButton {
+    width: 56px;
+    height: 56px;
+  }
+
+  .publishButton {
+    padding: 16px 39px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+/* Desktop */
+
+@media screen and (min-width: 1440px) {
+  .form {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .photoColumn {
+    flex-shrink: 0;
+    width: 551px;
+  }
+}

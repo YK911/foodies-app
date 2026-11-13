@@ -1,0 +1,155 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.control {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--color-grey, #bfbebe);
+  border-radius: 30px;
+  background-color: var(--color-white, #ffffff);
+  color: var(--color-main, #050505);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  transition: border-color 0.2s ease;
+}
+
+.trigger {
+  cursor: pointer;
+}
+
+.control:hover,
+.open {
+  border-color: var(--color-main, #050505);
+}
+
+.invalid,
+.invalid:hover {
+  border-color: var(--color-error, #ae0000);
+}
+
+.trigger:focus-visible,
+.control:focus-within {
+  outline: none;
+  border-color: var(--color-main, #050505);
+}
+
+.invalid.control:focus-within {
+  border-color: var(--color-error, #ae0000);
+}
+
+.value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--color-grey, #bfbebe);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+.input::placeholder {
+  color: var(--color-grey, #bfbebe);
+  opacity: 1;
+}
+
+.chevronButton {
+  display: flex;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.open .chevron {
+  transform: rotate(180deg);
+}
+
+.list {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-height: 286px;
+  margin: 0;
+  padding: 16px 18px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--color-border-light, #e8e8e8);
+  border-radius: 15px;
+  background-color: var(--color-white, #ffffff);
+  box-shadow: 0 12px 32px rgba(5, 5, 5, 0.08);
+}
+
+.option {
+  color: var(--color-main, #050505);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+}
+
+.active {
+  color: var(--color-grey, #bfbebe);
+}
+
+.selected {
+  font-weight: 700;
+}
+
+.empty {
+  color: var(--color-grey, #bfbebe);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .control {
+    padding: 16px 18px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .list {
+    max-height: 326px;
+  }
+
+  .option,
+  .empty {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
