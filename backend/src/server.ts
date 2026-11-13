@@ -6,6 +6,7 @@ import categoriesRouter from './routes/categoriesRouter.js';
 import areasRouter from './routes/areasRouter.js';
 import ingredientsRouter from './routes/ingredientsRouter.js';
 import testimonialsRouter from './routes/testimonialsRouter.js';
+import authRouter from './routes/authRouter.js';
 
 export const createApp = (): Application => {
   const app = express();
@@ -19,6 +20,8 @@ export const createApp = (): Application => {
   app.get('/api/health', (_req: Request, res: Response) => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
+
+  app.use('/api/auth', authRouter);
 
   // Public lookup endpoints
   app.use('/api/categories', categoriesRouter);
