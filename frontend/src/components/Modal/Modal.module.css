@@ -1,0 +1,75 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 12px;
+}
+
+.modal {
+  position: relative;
+  background-color: #f8f8f8;
+  border-radius: 30px;
+  padding: 56px 20px 40px;
+  width: 100%;
+  max-width: 320px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #050505;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.closeBtn:hover {
+  opacity: 1;
+}
+
+@media screen and (min-width: 375px) {
+  .backdrop {
+    padding: 16px;
+  }
+
+  .modal {
+    max-width: 343px;
+    padding: 56px 30px 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .backdrop {
+    padding: 20px;
+  }
+
+  .modal {
+    max-width: 560px;
+    padding: 80px 80px 64px;
+  }
+
+  .closeBtn {
+    top: 24px;
+    right: 24px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .closeBtn {
+    top: 24px;
+    right: 24px;
+  }
+}
