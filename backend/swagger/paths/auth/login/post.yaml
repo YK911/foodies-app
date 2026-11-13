@@ -1,0 +1,25 @@
+tags:
+  - Authentication
+summary: Sign in a user
+description: Validates credentials, starts a server session, and returns an access token.
+operationId: loginUser
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/components/schemas/LoginRequest'
+responses:
+  '200':
+    description: User authenticated
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/AuthResponse'
+  '400':
+    $ref: '#/components/responses/400'
+  '401':
+    $ref: '#/components/responses/401'
+  '500':
+    $ref: '#/components/responses/500'
