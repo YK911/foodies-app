@@ -74,6 +74,38 @@
   margin: 4px 0 0 18px;
 }
 
+.passwordBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInput {
+  padding-right: 42px;
+}
+
+.eyeBtn {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #050505;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 300ms ease-out;
+}
+
+.eyeBtn:hover {
+  opacity: 0.7;
+}
+
 .submitBtn {
   font-family: var(--font-family, 'Mulish', sans-serif);
   font-size: 14px;
@@ -111,7 +143,7 @@
   font-weight: 500;
   line-height: 1.5;
   letter-spacing: -0.02em;
-  color: rgba(26, 26, 26, 1);
+  color: rgba(191, 190, 190, 1);
   text-align: center;
   margin: 0;
 }
@@ -146,6 +178,21 @@
     font-size: 16px;
     line-height: 1.5;
   }
+
+  .passwordInput {
+    padding-right: 48px;
+  }
+
+  .eyeBtn {
+    right: 18px;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* .eyeBtn svg {
+    width: 20px;
+    height: 20px;
+  } */
 
   .submitBtn {
     height: 56px;
