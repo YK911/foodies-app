@@ -7,6 +7,7 @@ import areasRouter from './routes/areasRouter.js';
 import ingredientsRouter from './routes/ingredientsRouter.js';
 import testimonialsRouter from './routes/testimonialsRouter.js';
 import authRouter from './routes/authRouter.js';
+import recipesRouter from './routes/recipesRouter.js';
 
 export const createApp = (): Application => {
   const app = express();
@@ -26,6 +27,7 @@ export const createApp = (): Application => {
   // Public lookup endpoints
   app.use('/api/categories', categoriesRouter);
   app.use('/api/areas', areasRouter);
+  app.use('/api/recipes', recipesRouter);
   app.use('/api/ingredients', ingredientsRouter);
   app.use('/api/testimonials', testimonialsRouter);
 
