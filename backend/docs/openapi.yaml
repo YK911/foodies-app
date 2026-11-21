@@ -1,13 +1,16 @@
 openapi: 3.1.0
+
 info:
   title: Foodies API
   version: 1.0.0
   description: API documentation for Foodies full-stack platform
+
 servers:
   - url: /api
     description: Current server
   - url: http://localhost:5001/api
     description: Local development server
+
 tags:
   - name: System
     description: Service health and status
@@ -25,6 +28,7 @@ tags:
     description: Recipe ingredients
   - name: Testimonials
     description: User testimonials
+
 paths:
   /health:
     get:
@@ -49,11 +53,274 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
+
+  /users/avatar:
+    patch:
+      tags:
+        - Users
+      summary: Update current user's avatar
+      description: Uploads a new avatar image to Cloudinary.
+      operationId: updateAvatar
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - avatar
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: Avatar image (maximum 5 MB)
+      responses:
+        '200':
+          description: Avatar updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSummary'
+        '400':
+          description: Invalid image file
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /users/{id}/follow:
+    post:
+      tags:
+        - Users
+      summary: Follow a user
+      operationId: followUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to follow
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: User followed successfully
+        '400':
+          description: Cannot follow yourself
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+        '409':
+          description: Already following this user
+        '500':
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Users
+      summary: Unfollow a user
+      operationId: unfollowUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to unfollow
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User unfollowed successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Follow relationship not found
+        '500':
+          description: Internal Server Error
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get public user profile
+      description: Returns a public user profile with recipes and followers count.
+      operationId: getUserById
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUserProfile'
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+
+  /users/current:
+    get:
+      tags:
+        - Users
+      summary: Get current user profile
+      description: Returns the authenticated user's profile and activity counters.
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserProfile'
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+
+  /users/followers:
+    get:
+      tags:
+        - Users
+      summary: Get current user's followers
+      operationId: getFollowers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of followers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSummary'
+        '401':
+          description: Unauthorized
+
+  /users/following:
+    get:
+      tags:
+        - Users
+      summary: Get users followed by the current user
+      operationId: getFollowing
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of followed users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSummary'
+        '401':
+          description: Unauthorized
+
 components:
+  schemas:
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+
+    PublicUserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        recipes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              title:
+                type: string
+              description:
+                type: string
+              thumb:
+                type: string
+                nullable: true
+              time:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
+        _count:
+          type: object
+          properties:
+            followers:
+              type: integer
+
+    CurrentUserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        avatar:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        _count:
+          type: object
+          properties:
+            recipes:
+              type: integer
+            favorites:
+              type: integer
+            followers:
+              type: integer
+            following:
+              type: integer
+
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  schemas: {}
+
   responses: {}
