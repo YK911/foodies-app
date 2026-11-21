@@ -10,6 +10,7 @@ const UserPage = React.lazy(() => import('./pages/UserPage/UserPage'));
 export const App: React.FC = () => {
   return (
     <>
+      <Toaster position="top-right" />
       <Suspense fallback={<div>Завантаження...</div>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -19,7 +20,6 @@ export const App: React.FC = () => {
           <Route path="*" element={<div>Сторінку не знайдено (404)</div>} />
         </Routes>
       </Suspense>
-      <Toaster position="top-center" />
     </>
   );
 };
