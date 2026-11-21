@@ -1,20 +1,23 @@
-import React from 'react';
+﻿import { FE05AuthBridge } from '../../components/HomePage/FE05AuthBridge/FE05AuthBridge';
 import { useSearchParams } from 'react-router-dom';
+import { Hero } from '../../components/HomePage/Hero/Hero';
+import { Categories } from '../../components/HomePage/Categories/Categories';
 import { CATEGORY_PARAM, Recipes } from '../../components/HomePage/Recipes';
 import { Testimonials } from '../../components/HomePage/Testimonials';
 
-// Hero and Categories come in their own cards. A category tile opens the recipes block by
-// setting ?category=<name>; until then the block can be opened directly, e.g. /?category=Dessert.
-export const HomePage: React.FC = () => {
+export const HomePage = () => {
   const [searchParams] = useSearchParams();
   const hasCategory = searchParams.has(CATEGORY_PARAM);
 
   return (
     <main>
-      {hasCategory && <Recipes />}
+      <Hero />
+      {hasCategory ? <Recipes /> : <Categories />}
       <Testimonials />
+      <FE05AuthBridge />
     </main>
   );
 };
 
 export default HomePage;
+

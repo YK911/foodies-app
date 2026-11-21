@@ -1,0 +1,26 @@
+.hero{position:relative;isolation:isolate;max-width:1400px;height:970px;margin:20px auto 0;border-radius:30px;background:var(--color-primary);color:var(--color-white);overflow:hidden}
+.hero::before{content:"";position:absolute;z-index:-1;inset:0 60px;border-left:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1);pointer-events:none}
+.header{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 60px 0;min-height:66px}
+.logo{font-weight:var(--font-weight-extrabold);font-size:20px;letter-spacing:-.06em}
+.nav{display:flex;align-items:center;gap:32px;font-size:12px;font-weight:var(--font-weight-bold);text-transform:uppercase}
+.nav a,.nav button{transition:opacity .2s}.nav a:hover,.nav button:hover{opacity:.65}
+.nav a[aria-current]{border:1px solid var(--color-white);border-radius:30px;padding:9px 14px}
+.userActions{display:flex;gap:0;align-items:center;min-width:145px;justify-content:end}
+.userActions>button{height:40px;border:1px solid var(--color-white);padding:0 17px;font-size:12px;font-weight:var(--font-weight-bold);text-transform:uppercase}
+.signIn{border-radius:25px 0 0 25px;background:var(--color-white);color:var(--color-primary)}
+.signUp{border-radius:0 25px 25px 0}
+.profileLink{display:flex;gap:8px;align-items:center;max-width:200px;border-radius:30px;border:1px solid #fff;padding:4px 14px 4px 4px;font-size:12px;font-weight:700;text-transform:uppercase}
+.profileLink img,.profileLink>span:first-child{width:32px;height:32px;border-radius:50%;object-fit:cover;display:grid;place-items:center;background:#777}
+.profileText{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy{position:absolute;top:154px;left:50%;transform:translateX(-50%);width:min(100% - 32px,875px);display:flex;align-items:center;flex-direction:column;text-align:center}
+.copy h1{font-size:80px;line-height:.99;letter-spacing:-.035em;font-weight:var(--font-weight-extrabold);text-transform:uppercase}
+.copy p{max-width:577px;margin-top:40px;font-size:16px;line-height:24px;font-weight:var(--font-weight-medium);letter-spacing:-.02em}
+.addButton{margin-top:40px;min-height:56px;padding:0 32px;border:1px solid var(--color-white);border-radius:30px;font-weight:var(--font-weight-bold);font-size:16px;text-transform:uppercase;transition:background .2s,color .2s}
+.addButton:hover,.addButton:focus-visible{color:var(--color-primary);background:var(--color-white)}
+.heroPhotos{position:absolute;left:50%;top:621px;transform:translateX(-50%);width:480px;height:335px}
+.photoMain{position:absolute;right:0;top:0;width:352px;height:330px;border-radius:22px;overflow:hidden;transform:rotate(-11deg)}
+.photoSmall{position:absolute;left:0;top:80px;width:148px;height:138px;border-radius:20px;overflow:hidden;transform:rotate(12deg);z-index:1}
+.heroPhotos img{width:100%;height:100%;object-fit:cover}
+@media(max-width:1439px){.hero{height:992px;margin:16px 16px 0}.header{padding:20px 32px 0}.copy{top:217px;width:min(100% - 32px,678px)}.copy h1{font-size:64px}.heroPhotos{top:634px}.hero::before{inset:0 32px}}
+@media(max-width:767px){.hero{height:796px;margin:8px 8px 0;border-radius:20px}.header{padding:16px 16px 0;min-height:54px}.logo{font-size:16px}.nav{display:none}.userActions{min-width:0}.userActions>button{height:32px;padding:0 10px;font-size:9px}.profileText{display:none}.profileLink{padding:2px}.profileLink img,.profileLink>span:first-child{width:30px;height:30px}.copy{top:194px;width:calc(100% - 32px)}.copy h1{font-size:40px;line-height:40px;letter-spacing:-.035em}.desktopBreak{display:none}.copy p{margin-top:20px;font-size:12px;line-height:20px}.addButton{margin-top:20px;min-height:44px;padding:0 24px;font-size:12px}.heroPhotos{top:527px;width:300px;height:210px}.photoMain{width:222px;height:208px}.photoSmall{left:0;top:52px;width:89px;height:83px;border-radius:13px}.hero::before{inset:0 16px}}
+@media(max-width:359px){.copy h1{font-size:35px}.heroPhotos{width:270px}.photoMain{width:203px}.photoSmall{left:0}}

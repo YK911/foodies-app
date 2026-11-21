@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+﻿import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { SelectField, type SelectOption } from '../../SelectField/SelectField';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
@@ -32,6 +32,9 @@ export const RecipeFilters = ({ value, onChange, className }: RecipeFiltersProps
   const dispatch = useAppDispatch();
   const ingredients = useAppSelector((state) => state.meta.ingredients);
   const areas = useAppSelector((state) => state.meta.areas);
+  // Guard against lookup endpoints returning wrapped objects instead of arrays.
+  const safeIngredients = Array.isArray(ingredients) ? ingredients : [];
+  const safeAreas = Array.isArray(areas) ? areas : [];
 
   useEffect(() => {
     dispatch(fetchLookups());
@@ -40,21 +43,21 @@ export const RecipeFilters = ({ value, onChange, className }: RecipeFiltersProps
   const ingredientOptions = useMemo(
     () =>
       withResetOption(
-        ingredients.map(({ id, name }) => ({ value: id, label: name })),
+        safeIngredients.map(({ id, name }) => ({ value: id, label: name })),
         value.ingredient,
         'All ingredients',
       ),
-    [ingredients, value.ingredient],
+    [safeIngredients, value.ingredient],
   );
 
   const areaOptions = useMemo(
     () =>
       withResetOption(
-        areas.map(({ name }) => ({ value: name, label: name })),
+        safeAreas.map(({ name }) => ({ value: name, label: name })),
         value.area,
         'All areas',
       ),
-    [areas, value.area],
+    [safeAreas, value.area],
   );
 
   return (
@@ -83,3 +86,4 @@ export const RecipeFilters = ({ value, onChange, className }: RecipeFiltersProps
 };
 
 export default RecipeFilters;
+
