@@ -13,3 +13,100 @@ paths:
       responses:
         '200':
           description: Server is healthy
+  /recipes:
+    post:
+      summary: Create a recipe
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [title, category, area, instructions, description, time, ingredients]
+              properties:
+                title: { type: string }
+                category: { type: string }
+                area: { type: string }
+                instructions: { type: string }
+                description: { type: string }
+                time: { type: string }
+                ingredients:
+                  type: string
+                  description: JSON array of {id, measure}
+                thumb:
+                  type: string
+                  format: binary
+      responses:
+        '201': { description: Recipe created }
+        '400': { description: Invalid recipe data }
+        '401': { description: Not authorized }
+  /recipes/own:
+    get:
+      summary: Get current user's recipes
+      security:
+        - bearerAuth: []
+      parameters:
+        - { name: page, in: query, schema: { type: integer, minimum: 1 }, required: false }
+        - {
+            name: limit,
+            in: query,
+            schema: { type: integer, minimum: 1, maximum: 100 },
+            required: false,
+          }
+      responses:
+        '200': { description: Paginated owned recipes }
+        '401': { description: Not authorized }
+  /recipes/{id}:
+    delete:
+      summary: Delete a recipe owned by the current user
+      security:
+        - bearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Recipe deleted }
+        '403': { description: Recipe belongs to another user }
+        '404': { description: Recipe not found }
+  /recipes/{id}/favorite:
+    post:
+      summary: Add recipe to favorites
+      security:
+        - bearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '201': { description: Added to favorites }
+        '404': { description: Recipe not found }
+    delete:
+      summary: Remove recipe from favorites
+      security:
+        - bearerAuth: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Removed from favorites }
+        '404': { description: Favorite not found }
+  /recipes/favorite:
+    get:
+      summary: Get current user's favorite recipes
+      security:
+        - bearerAuth: []
+      parameters:
+        - { name: page, in: query, schema: { type: integer, minimum: 1 }, required: false }
+        - {
+            name: limit,
+            in: query,
+            schema: { type: integer, minimum: 1, maximum: 100 },
+            required: false,
+          }
+      responses:
+        '200': { description: Paginated favorite recipes }
+        '401': { description: Not authorized }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'node:path';
 import createHttpError, { HttpError } from 'http-errors';
+import recipeRoutes from './routes/recipeRoutes.js';
 
 export const createApp = (): Application => {
   const app = express();
@@ -22,6 +23,8 @@ export const createApp = (): Application => {
   app.get('/api/health', (_req: Request, res: Response) => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
+
+  app.use('/api/recipes', recipeRoutes);
 
   app.use((_req: Request, _res: Response, next: NextFunction) => {
     next(createHttpError(404, 'Route not found'));
