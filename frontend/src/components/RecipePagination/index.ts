@@ -1,0 +1,1 @@
+export { RecipePagination } from './RecipePagination';

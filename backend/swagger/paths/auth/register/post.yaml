@@ -1,0 +1,29 @@
+tags:
+  - Authentication
+summary: Register a user
+description: Creates a user, starts a server session, and returns an access token.
+operationId: registerUser
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/components/schemas/RegisterRequest'
+responses:
+  '201':
+    description: User registered and authenticated
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/AuthResponse'
+  '400':
+    $ref: '#/components/responses/400'
+  '409':
+    description: Email is already in use
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ErrorResponse'
+  '500':
+    $ref: '#/components/responses/500'

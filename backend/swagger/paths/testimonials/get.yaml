@@ -1,0 +1,18 @@
+# GET /api/testimonials
+tags:
+  - Testimonials
+summary: Get testimonials for the home page slider
+description: Public endpoint, no authorization required.
+operationId: getTestimonials
+security: []
+responses:
+  '200':
+    description: Testimonials, oldest first
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../components/schemas/Testimonial.yaml'
+  '500':
+    description: Internal Server Error

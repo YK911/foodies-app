@@ -1,0 +1,93 @@
+/* Design tokens from the Foodies UI kit; drop them once the global theme defines them. */
+.page {
+  --color-main: #050505;
+  --color-dark: #1a1a1a;
+  --color-grey: #bfbebe;
+  --color-border-light: #e8e8e8;
+  --color-error: #ae0000;
+  --color-white: #ffffff;
+
+  padding: 64px 0;
+  background-color: var(--color-white);
+  color: var(--color-main);
+  font-family: 'Mulish', sans-serif;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+/* The shared PathInfo, MainTitle and Subtitle styles, adjusted to the Add recipe frames in Figma.
+   The extra class in each selector keeps these rules ahead of the shared ones in any CSS order. */
+.breadcrumbs a {
+  color: var(--color-grey);
+}
+
+.breadcrumbs [aria-current='page'] {
+  color: var(--color-main);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heading .subtitle {
+  max-width: 443px;
+}
+
+@media screen and (max-width: 767.98px) {
+  .heading .title {
+    font-size: 28px;
+    line-height: 32px;
+  }
+}
+
+@media screen and (min-width: 375px) {
+  .container {
+    max-width: 375px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 0 32px;
+  }
+
+  .intro {
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .heading {
+    gap: 20px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .page {
+    padding: 80px 0 120px;
+  }
+
+  .container {
+    max-width: 1440px;
+    padding: 0 80px;
+  }
+}

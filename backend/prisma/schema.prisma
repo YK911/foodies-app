@@ -19,11 +19,25 @@ model User {
 
   recipes   Recipe[]
   favorites Favorite[]
+  sessions  Session[]
 
   followers Follower[] @relation("UserFollowers")
   following Follower[] @relation("UserFollowing")
 
   @@map("users")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
 }
 
 model Follower {

@@ -1,332 +1,350 @@
+import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+
+// Наповнення БД даними курсу.
+//
+// Джерела даних (папка prisma/data є в .gitignore):
+//   prisma/data/foodies/*.json  — експорт MongoDB (основне джерело)
+//   prisma/data/sql_csv/*.csv   — CSV-версія (якщо JSON немає)
+//
+// npm run seed             — додає лише відсутні записи; наявні дані не змінює
+// npm run seed -- --reset  — спершу ВИДАЛЯЄ всі дані з усіх таблиць, потім імпортує заново
 
 const prisma = new PrismaClient();
 
 const DATA_DIR_JSON = path.join(process.cwd(), 'prisma', 'data', 'foodies');
 const DATA_DIR_CSV = path.join(process.cwd(), 'prisma', 'data', 'sql_csv');
+const RESET = process.argv.includes('--reset');
 
-// Функція для вилучення ID (підтримує як string, так і MongoDB { $oid: '...' })
-const extractId = (item: any): string | undefined => {
-  if (!item) return undefined;
-  const rawId = item._id || item.id;
-  if (!rawId) return undefined;
+type MongoId = string | { $oid: string };
+type CsvRow = Record<string, string>;
 
-  // Якщо id це об'єкт MongoDB $oid
-  if (typeof rawId === 'object' && rawId.$oid) {
-    return String(rawId.$oid).trim();
-  }
-  if (typeof rawId === 'string' && rawId.trim() !== '' && rawId !== '[object Object]') {
-    return rawId.trim();
-  }
-  if (typeof rawId === 'number') {
-    return String(rawId);
-  }
-  return undefined;
+interface SeedData {
+  areas: { id: string; name: string }[];
+  categories: { id: string; name: string }[];
+  ingredients: { id: string; name: string; desc: string | null; img: string | null }[];
+  users: { id: string; name: string; email: string; avatar: string | null }[];
+  testimonials: { id: string; ownerId: string; testimonial: string }[];
+  recipes: {
+    id: string;
+    title: string;
+    category: string;
+    area: string;
+    instructions: string;
+    description: string;
+    thumb: string | null;
+    time: string;
+    ownerId: string;
+    ingredients: { id: string; measure: string }[];
+  }[];
+}
+
+// ObjectId приходить або рядком, або обʼєктом MongoDB { $oid: '...' }
+const toId = (value: MongoId | undefined): string =>
+  typeof value === 'object' && value !== null ? value.$oid.trim() : String(value ?? '').trim();
+
+// Порожній рядок → null
+const orNull = (value: string | null | undefined): string | null => {
+  const text = value?.trim() ?? '';
+  return text === '' ? null : text;
 };
 
-// Читання JSON
-const loadJson = <T>(filename: string): T[] => {
-  const filePath = path.join(DATA_DIR_JSON, filename);
-  if (!fs.existsSync(filePath)) {
-    return [];
+// Парсер CSV (RFC 4180): поля в лапках можуть містити коми, переноси рядків та "" (екранована лапка)
+const parseCsv = (content: string): CsvRow[] => {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = '';
+  let inQuotes = false;
+  const text = content.replace(/^﻿/, '');
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    if (inQuotes) {
+      if (char === '"' && text[i + 1] === '"') {
+        field += '"';
+        i += 1;
+      } else if (char === '"') {
+        inQuotes = false;
+      } else {
+        field += char;
+      }
+    } else if (char === '"') {
+      inQuotes = true;
+    } else if (char === ',') {
+      row.push(field);
+      field = '';
+    } else if (char === '\n' || char === '\r') {
+      if (char === '\r' && text[i + 1] === '\n') i += 1;
+      row.push(field);
+      rows.push(row);
+      row = [];
+      field = '';
+    } else {
+      field += char;
+    }
   }
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  if (field !== '' || row.length > 0) {
+    row.push(field);
+    rows.push(row);
+  }
+
+  const [headers = [], ...records] = rows.filter((cells) => cells.some((cell) => cell !== ''));
+  return records.map((cells) =>
+    Object.fromEntries(headers.map((header, index) => [header.trim(), cells[index] ?? ''])),
+  );
 };
 
-// Читання CSV
-const loadCsv = (filename: string): Record<string, string>[] => {
-  const filePath = path.join(DATA_DIR_CSV, filename);
-  if (!fs.existsSync(filePath)) {
-    return [];
+interface JsonNamed {
+  _id: MongoId;
+  name: string;
+}
+interface JsonIngredient extends JsonNamed {
+  desc?: string;
+  img?: string;
+}
+interface JsonUser extends JsonNamed {
+  email: string;
+  avatar?: string | null;
+}
+interface JsonTestimonial {
+  _id: MongoId;
+  owner: MongoId;
+  testimonial?: string;
+}
+interface JsonRecipe {
+  _id: MongoId;
+  title?: string;
+  category?: string;
+  area?: string;
+  instructions?: string;
+  description?: string;
+  thumb?: string;
+  time?: string | number;
+  owner?: MongoId;
+  ingredients?: { id: MongoId; measure?: string }[];
+}
+
+const loadFromJson = (): SeedData => {
+  const read = <T>(file: string): T[] =>
+    JSON.parse(fs.readFileSync(path.join(DATA_DIR_JSON, file), 'utf-8')) as T[];
+
+  return {
+    areas: read<JsonNamed>('areas.json').map((a) => ({ id: toId(a._id), name: a.name.trim() })),
+    categories: read<JsonNamed>('categories.json').map((c) => ({
+      id: toId(c._id),
+      name: c.name.trim(),
+    })),
+    ingredients: read<JsonIngredient>('ingredients.json').map((i) => ({
+      id: toId(i._id),
+      name: i.name.trim(),
+      desc: orNull(i.desc),
+      img: orNull(i.img),
+    })),
+    users: read<JsonUser>('users.json').map((u) => ({
+      id: toId(u._id),
+      name: u.name?.trim() || 'Anonymous',
+      email: u.email.trim().toLowerCase(),
+      avatar: orNull(u.avatar),
+    })),
+    testimonials: read<JsonTestimonial>('testimonials.json').map((t) => ({
+      id: toId(t._id),
+      ownerId: toId(t.owner),
+      testimonial: t.testimonial ?? '',
+    })),
+    recipes: read<JsonRecipe>('recipes.json').map((r) => ({
+      id: toId(r._id),
+      title: r.title?.trim() || 'Untitled Recipe',
+      category: r.category?.trim() ?? '',
+      area: r.area?.trim() ?? '',
+      instructions: r.instructions ?? '',
+      description: r.description ?? '',
+      thumb: orNull(r.thumb),
+      time: String(r.time ?? '').trim() || '30',
+      ownerId: toId(r.owner),
+      ingredients: (r.ingredients ?? []).map((i) => ({
+        id: toId(i.id),
+        measure: i.measure?.trim() ?? '',
+      })),
+    })),
+  };
+};
+
+const loadFromCsv = (): SeedData => {
+  const read = (file: string): CsvRow[] =>
+    parseCsv(fs.readFileSync(path.join(DATA_DIR_CSV, file), 'utf-8'));
+
+  const ingredientsByRecipe = new Map<string, { id: string; measure: string }[]>();
+  for (const link of read('7_recipe_ingredients.csv')) {
+    const list = ingredientsByRecipe.get(link.recipe_id) ?? [];
+    list.push({ id: link.ingredient_id.trim(), measure: link.measure.trim() });
+    ingredientsByRecipe.set(link.recipe_id, list);
   }
-  const content = fs.readFileSync(filePath, 'utf-8');
-  const lines: string[] = content.split('\n').filter((line: string) => line.trim() !== '');
-  if (lines.length < 2) return [];
 
-  const headers: string[] = lines[0]
-    .split(',')
-    .map((h: string) => h.trim().replace(/^"|"$/g, ''));
+  return {
+    areas: read('1_areas.csv').map((r) => ({ id: r.id.trim(), name: r.name.trim() })),
+    categories: read('2_categories.csv').map((r) => ({ id: r.id.trim(), name: r.name.trim() })),
+    ingredients: read('3_ingredients.csv').map((r) => ({
+      id: r.id.trim(),
+      name: r.name.trim(),
+      desc: orNull(r.description),
+      img: orNull(r.img),
+    })),
+    users: read('4_users.csv').map((r) => ({
+      id: r.id.trim(),
+      name: r.name.trim() || 'Anonymous',
+      email: r.email.trim().toLowerCase(),
+      avatar: orNull(r.avatar),
+    })),
+    testimonials: read('5_testimonials.csv').map((r) => ({
+      id: r.id.trim(),
+      ownerId: r.owner_id.trim(),
+      testimonial: r.testimonial,
+    })),
+    recipes: read('6_recipes.csv').map((r) => ({
+      id: r.id.trim(),
+      title: r.title.trim() || 'Untitled Recipe',
+      category: r.category.trim(),
+      area: r.area.trim(),
+      instructions: r.instructions,
+      description: r.description,
+      thumb: orNull(r.thumb),
+      time: r.time.trim() || '30',
+      ownerId: r.owner_id.trim(),
+      ingredients: ingredientsByRecipe.get(r.id) ?? [],
+    })),
+  };
+};
 
-  return lines.slice(1).map((line: string) => {
-    const values: string[] = line
-      .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
-      .map((v: string) => v.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
-
-    const row: Record<string, string> = {};
-    headers.forEach((header: string, index: number) => {
-      row[header] = values[index] || '';
-    });
-    return row;
-  });
+const loadData = (): SeedData => {
+  if (fs.existsSync(path.join(DATA_DIR_JSON, 'recipes.json'))) {
+    console.log(`📦 Джерело даних: JSON (${DATA_DIR_JSON})`);
+    return loadFromJson();
+  }
+  if (fs.existsSync(path.join(DATA_DIR_CSV, '6_recipes.csv'))) {
+    console.log(`📦 Джерело даних: CSV (${DATA_DIR_CSV})`);
+    return loadFromCsv();
+  }
+  throw new Error(
+    `Немає даних для seed. Розпакуйте foodies.zip у ${DATA_DIR_JSON} або CSV-файли у ${DATA_DIR_CSV}`,
+  );
 };
 
 async function main() {
-  console.log('🌱 Початок наповнення бази даних Supabase...');
+  console.log('🌱 Початок наповнення бази даних...');
+  const data = loadData();
 
-  console.log('🧹 Очищення старих даних...');
-  await prisma.recipeIngredient.deleteMany();
-  await prisma.favorite.deleteMany();
-  await prisma.follower.deleteMany();
-  await prisma.recipe.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.ingredient.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.area.deleteMany();
-  await prisma.testimonial.deleteMany();
-
-  // =========================================================================
-  // 1. Areas
-  // =========================================================================
-  console.log('📍 Імпорт Areas...');
-  let rawAreas = loadJson<any>('areas.json');
-  if (rawAreas.length === 0) {
-    const csv = loadCsv('1_areas.csv');
-    rawAreas = csv.map((r) => ({ id: r.id, name: r.name }));
+  if (RESET) {
+    console.log('🧹 --reset: видалення всіх даних з усіх таблиць...');
+    await prisma.$transaction([
+      prisma.recipeIngredient.deleteMany(),
+      prisma.favorite.deleteMany(),
+      prisma.follower.deleteMany(),
+      prisma.recipe.deleteMany(),
+      prisma.testimonial.deleteMany(),
+      prisma.user.deleteMany(),
+      prisma.ingredient.deleteMany(),
+      prisma.category.deleteMany(),
+      prisma.area.deleteMany(),
+    ]);
   }
 
-  const seenAreas = new Set<string>();
-  for (const item of rawAreas) {
-    const name = item.name?.trim();
-    if (!name || seenAreas.has(name)) continue;
-    seenAreas.add(name);
-
-    const id = extractId(item);
-    await prisma.area.create({
-      data: {
-        ...(id ? { id } : {}),
-        name,
-      },
-    });
+  let seedPassword = process.env.SEED_USER_PASSWORD?.trim();
+  if (!seedPassword) {
+    seedPassword = randomBytes(9).toString('base64url');
+    console.log(`🔑 SEED_USER_PASSWORD не задано. Пароль нових seed-користувачів: ${seedPassword}`);
   }
+  const passwordHash = await bcrypt.hash(seedPassword, 10);
+  const userNames = new Map(data.users.map((u) => [u.id, u.name]));
 
-  // =========================================================================
-  // 2. Categories
-  // =========================================================================
-  console.log('📂 Імпорт Categories...');
-  let rawCategories = loadJson<any>('categories.json');
-  if (rawCategories.length === 0) {
-    const csv = loadCsv('2_categories.csv');
-    rawCategories = csv.map((r) => ({ id: r.id, name: r.name }));
+  // Кожна таблиця вставляється одним запитом; наявні записи (той самий id або унікальне поле)
+  // пропускаються, тож повторний запуск нічого не дублює.
+  const added: Record<string, number> = {};
+
+  added.areas = (await prisma.area.createMany({ data: data.areas, skipDuplicates: true })).count;
+  added.categories = (
+    await prisma.category.createMany({ data: data.categories, skipDuplicates: true })
+  ).count;
+  added.ingredients = (
+    await prisma.ingredient.createMany({ data: data.ingredients, skipDuplicates: true })
+  ).count;
+  added.users = (
+    await prisma.user.createMany({
+      data: data.users.map((u) => ({ ...u, password: passwordHash })),
+      skipDuplicates: true,
+    })
+  ).count;
+  added.testimonials = (
+    await prisma.testimonial.createMany({
+      data: data.testimonials.map((t) => ({
+        id: t.id,
+        ownerName: userNames.get(t.ownerId) ?? 'Food Lover',
+        testimonial: t.testimonial,
+      })),
+      skipDuplicates: true,
+    })
+  ).count;
+
+  // Рецепт імпортується, лише якщо його автор, категорія та регіон є в БД
+  const [owners, categories, areas] = await Promise.all([
+    prisma.user.findMany({
+      where: { id: { in: [...new Set(data.recipes.map((r) => r.ownerId))] } },
+      select: { id: true },
+    }),
+    prisma.category.findMany({ select: { name: true } }),
+    prisma.area.findMany({ select: { name: true } }),
+  ]);
+  const ownerIds = new Set(owners.map((u) => u.id));
+  const categoryNames = new Set(categories.map((c) => c.name));
+  const areaNames = new Set(areas.map((a) => a.name));
+
+  const recipes = data.recipes.filter(
+    (r) => ownerIds.has(r.ownerId) && categoryNames.has(r.category) && areaNames.has(r.area),
+  );
+  const skippedRecipes = data.recipes.length - recipes.length;
+
+  added.recipes = (
+    await prisma.recipe.createMany({
+      data: recipes.map(({ ingredients: _ingredients, category, area, ...recipe }) => ({
+        ...recipe,
+        categoryName: category,
+        areaName: area,
+      })),
+      skipDuplicates: true,
+    })
+  ).count;
+
+  const [savedRecipes, savedIngredients] = await Promise.all([
+    prisma.recipe.findMany({
+      where: { id: { in: recipes.map((r) => r.id) } },
+      select: { id: true },
+    }),
+    prisma.ingredient.findMany({ select: { id: true } }),
+  ]);
+  const recipeIds = new Set(savedRecipes.map((r) => r.id));
+  const ingredientIds = new Set(savedIngredients.map((i) => i.id));
+
+  const links = recipes
+    .filter((r) => recipeIds.has(r.id))
+    .flatMap((r) =>
+      r.ingredients
+        .filter((i) => ingredientIds.has(i.id))
+        .map((i) => ({ recipeId: r.id, ingredientId: i.id, measure: i.measure })),
+    );
+  added.recipeIngredients = (
+    await prisma.recipeIngredient.createMany({ data: links, skipDuplicates: true })
+  ).count;
+
+  console.log('📊 Додано записів (наявні пропущено):');
+  for (const [table, count] of Object.entries(added)) {
+    console.log(`   ${table.padEnd(18)} +${count}`);
   }
-
-  const seenCategories = new Set<string>();
-  for (const item of rawCategories) {
-    const name = item.name?.trim();
-    if (!name || seenCategories.has(name)) continue;
-    seenCategories.add(name);
-
-    const id = extractId(item);
-    await prisma.category.create({
-      data: {
-        ...(id ? { id } : {}),
-        name,
-      },
-    });
+  if (skippedRecipes > 0) {
+    console.warn(`⚠️ Пропущено рецептів без автора, категорії чи регіону в БД: ${skippedRecipes}`);
   }
-
-  // =========================================================================
-  // 3. Ingredients
-  // =========================================================================
-  console.log('🥑 Імпорт Ingredients...');
-  let rawIngredients = loadJson<any>('ingredients.json');
-  if (rawIngredients.length === 0) {
-    const csv = loadCsv('3_ingredients.csv');
-    rawIngredients = csv.map((r) => ({ id: r.id, name: r.name, desc: r.desc, img: r.img }));
-  }
-
-  const seenIngredients = new Set<string>();
-  for (const item of rawIngredients) {
-    const name = item.name?.trim();
-    if (!name || seenIngredients.has(name)) continue;
-    seenIngredients.add(name);
-
-    const id = extractId(item);
-    await prisma.ingredient.create({
-      data: {
-        ...(id ? { id } : {}),
-        name,
-        desc: item.desc || null,
-        img: item.img || null,
-      },
-    });
-  }
-
-  // =========================================================================
-  // 4. Users
-  // =========================================================================
-  console.log('👤 Імпорт Users...');
-  let rawUsers = loadJson<any>('users.json');
-  if (rawUsers.length === 0) {
-    const csv = loadCsv('4_users.csv');
-    rawUsers = csv.map((r) => ({ id: r.id, name: r.name, email: r.email, password: r.password, avatar: r.avatar }));
-  }
-
-  const userMap = new Map<string, string>();
-  const userNameMap = new Map<string, string>(); // Зберігаємо ім'я за старим ID
-  const seenEmails = new Set<string>();
-
-  for (const item of rawUsers) {
-    const email = item.email?.trim().toLowerCase();
-    if (!email || seenEmails.has(email)) continue;
-    seenEmails.add(email);
-
-    const id = extractId(item);
-    const name = item.name?.trim() || 'Anonymous';
-
-    const createdUser = await prisma.user.create({
-      data: {
-        ...(id ? { id } : {}),
-        name,
-        email,
-        password: item.password || '$2a$10$7EqJtq98hPqEX7fNZaFWoOhi5K6p0jS8g3o5i3l9c2g8',
-        avatar: item.avatar || null,
-      },
-    });
-
-    if (id) {
-      userMap.set(id, createdUser.id);
-      userNameMap.set(id, createdUser.name); // Запам'ятовуємо ім'я
-    }
-  }
-
-  const fallbackUser = await prisma.user.findFirst();
-
-  // =========================================================================
-  // 5. Testimonials
-  // =========================================================================
-  console.log('💬 Імпорт Testimonials...');
-  let rawTestimonials = loadJson<any>('testimonials.json');
-  if (rawTestimonials.length === 0) {
-    const csv = loadCsv('5_testimonials.csv');
-    rawTestimonials = csv.map((r) => ({ id: r.id, ownerName: r.owner || r.ownerName, testimonial: r.testimonial }));
-  }
-
-  for (const item of rawTestimonials) {
-    const id = extractId(item);
-
-    // Безпечно визначаємо ім'я: якщо це ID користувача — беремо його ім'я з бази
-    const ownerId = extractId({ id: item.owner }) || extractId({ id: item.ownerName });
-    let resolvedOwnerName = 'Food Lover';
-
-    if (ownerId && userNameMap.has(ownerId)) {
-      resolvedOwnerName = userNameMap.get(ownerId)!;
-    } else if (typeof item.ownerName === 'string' && item.ownerName.trim()) {
-      resolvedOwnerName = item.ownerName.trim();
-    } else if (typeof item.owner === 'string' && item.owner.trim()) {
-      resolvedOwnerName = item.owner.trim();
-    }
-
-    await prisma.testimonial.create({
-      data: {
-        ...(id ? { id } : {}),
-        ownerName: resolvedOwnerName,
-        testimonial: typeof item.testimonial === 'string' ? item.testimonial : '',
-      },
-    });
-  }
-
-  // =========================================================================
-  // 6. Recipes & RecipeIngredients
-  // =========================================================================
-  console.log('🍲 Імпорт Recipes...');
-  const rawRecipes = loadJson<any>('recipes.json');
-
-  if (rawRecipes.length > 0) {
-    for (const r of rawRecipes) {
-      const recipeId = extractId(r);
-      const rawOwner = extractId({ id: r.owner });
-      const ownerId = (rawOwner && userMap.get(rawOwner)) || fallbackUser?.id;
-
-      if (!ownerId) continue;
-
-      const categoryName = r.category?.trim();
-      const areaName = r.area?.trim();
-
-      const categoryExists = await prisma.category.findUnique({ where: { name: categoryName } });
-      const areaExists = await prisma.area.findUnique({ where: { name: areaName } });
-
-      if (!categoryExists || !areaExists) continue;
-
-      const createdRecipe = await prisma.recipe.create({
-        data: {
-          ...(recipeId ? { id: recipeId } : {}),
-          title: r.title || 'Untitled Recipe',
-          categoryName,
-          areaName,
-          instructions: r.instructions || '',
-          description: r.description || '',
-          thumb: r.thumb || null,
-          time: String(r.time || '30'),
-          ownerId,
-        },
-      });
-
-      if (Array.isArray(r.ingredients)) {
-        for (const ing of r.ingredients) {
-          const ingId = extractId(ing);
-          if (!ingId) continue;
-
-          const dbIngredient = await prisma.ingredient.findUnique({ where: { id: ingId } });
-          if (dbIngredient) {
-            await prisma.recipeIngredient.create({
-              data: {
-                recipeId: createdRecipe.id,
-                ingredientId: dbIngredient.id,
-                measure: ing.measure || '',
-              },
-            });
-          }
-        }
-      }
-    }
-  } else {
-    const recipesCsv = loadCsv('6_recipes.csv');
-    const recipeIngredientsCsv = loadCsv('7_recipe_ingredients.csv');
-
-    for (const r of recipesCsv) {
-      const ownerId = (r.owner && userMap.get(r.owner)) || fallbackUser?.id;
-      if (!ownerId) continue;
-
-      const recipeId = r.id?.trim();
-      const categoryName = r.category?.trim();
-      const areaName = r.area?.trim();
-
-      const categoryExists = await prisma.category.findUnique({ where: { name: categoryName } });
-      const areaExists = await prisma.area.findUnique({ where: { name: areaName } });
-      if (!categoryExists || !areaExists) continue;
-
-      const created = await prisma.recipe.create({
-        data: {
-          ...(recipeId ? { id: recipeId } : {}),
-          title: r.title || 'Delicious Recipe',
-          categoryName,
-          areaName,
-          instructions: r.instructions || '',
-          description: r.description || '',
-          thumb: r.thumb || null,
-          time: r.time || '30',
-          ownerId,
-        },
-      });
-
-      const matchingIngs = recipeIngredientsCsv.filter((ri) => ri.recipe_id === r.id);
-      for (const mi of matchingIngs) {
-        const dbIng = await prisma.ingredient.findUnique({ where: { id: mi.ingredient_id } });
-        if (dbIng) {
-          await prisma.recipeIngredient.create({
-            data: {
-              recipeId: created.id,
-              ingredientId: dbIng.id,
-              measure: mi.measure || '',
-            },
-          });
-        }
-      }
-    }
-  }
-
   console.log('✅ Наповнення бази даних успішно завершено!');
 }
 

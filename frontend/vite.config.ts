@@ -6,7 +6,7 @@ import svgr from 'vite-plugin-svgr';
 export default defineConfig(({ command }) => ({
   plugins: [react(), svgr()],
   // Для деплою на GitHub Pages: назва вашого репозиторію
-  base: command === 'build' ? '/foodies-app/' : '/',
+  base: command === 'build' || process.env.npm_lifecycle_event === 'preview' ? '/foodies-app/' : '/',
   server: {
     port: 3000,
     open: true,

@@ -1,0 +1,13 @@
+type: object
+required: [id, ownerName, testimonial]
+properties:
+  id:
+    type: string
+    description: ObjectId for seeded rows, UUID for rows created later
+    example: 647495d0c825f1570b04182d
+  ownerName:
+    type: string
+    example: GoIT
+  testimonial:
+    type: string
+    example: Foodies has transformed my cooking experience!

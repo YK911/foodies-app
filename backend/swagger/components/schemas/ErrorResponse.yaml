@@ -1,0 +1,13 @@
+type: object
+required:
+  - status
+  - message
+properties:
+  status:
+    type: integer
+    description: HTTP status code
+    example: 400
+  message:
+    type: string
+    description: Human-readable error message
+    example: Bad Request

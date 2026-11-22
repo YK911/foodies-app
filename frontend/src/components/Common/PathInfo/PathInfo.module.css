@@ -1,0 +1,39 @@
+.navigation {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item:not(:last-child)::after {
+  content: '/';
+  color: var(--color-secondary);
+}
+
+.link {
+  transition: opacity var(--transition-duration) var(--transition-timing-function);
+}
+
+.link:hover,
+.link:focus-visible {
+  opacity: 0.6;
+}
+
+.current {
+  color: var(--color-secondary);
+}

@@ -1,0 +1,25 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media screen and (min-width: 768px) {
+  .filters {
+    flex-direction: row;
+  }
+
+  .filters > * {
+    flex: 1 1 0;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters > * {
+    flex: none;
+  }
+}

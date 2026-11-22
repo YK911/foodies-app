@@ -1,0 +1,8 @@
+type: object
+required: [user, token]
+properties:
+  user:
+    $ref: '#/components/schemas/AuthUser'
+  token:
+    type: string
+    description: JWT access token associated with an active server session

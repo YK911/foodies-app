@@ -1,0 +1,15 @@
+.subtitle {
+  max-width: 600px;
+  color: var(--color-primary-light);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.43;
+  letter-spacing: -0.02em;
+}
+
+@media screen and (min-width: 768px) {
+  .subtitle {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}

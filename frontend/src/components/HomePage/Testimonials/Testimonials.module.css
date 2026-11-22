@@ -1,0 +1,174 @@
+.section {
+  padding-block: 64px;
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  max-width: 822px;
+  margin-inline: auto;
+}
+
+.reviews {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  width: 100%;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--color-primary-light);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: 20px;
+  letter-spacing: -0.02em;
+}
+
+.title {
+  color: var(--color-primary);
+  font-size: 28px;
+  font-weight: var(--font-weight-extrabold);
+  line-height: 32px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.quote {
+  position: absolute;
+  top: 80px;
+  left: 8px;
+  width: 40px;
+  height: 32px;
+}
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  margin: 0;
+  animation: fade-in 400ms var(--transition-timing-function);
+}
+
+.text {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: var(--font-weight-medium);
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.author {
+  color: var(--color-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-extrabold);
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--color-secondary);
+  transition: background-color var(--transition-duration) var(--transition-timing-function);
+}
+
+.dot:hover,
+.dot:focus-visible,
+.dotActive {
+  background-color: var(--color-primary);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    animation: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .section {
+    padding-block: 100px;
+  }
+
+  .reviews,
+  .slide {
+    gap: 80px;
+  }
+
+  .eyebrow {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .title {
+    font-size: 40px;
+    line-height: 44px;
+  }
+
+  .quote {
+    top: 76px;
+    left: 40px;
+    width: 59px;
+    height: 48px;
+  }
+
+  .text {
+    font-size: 24px;
+    line-height: 36px;
+  }
+
+  .author {
+    font-size: 20px;
+  }
+
+  .dots {
+    gap: 12px;
+  }
+
+  .dot {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .section {
+    padding-block: 120px;
+  }
+}

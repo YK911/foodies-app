@@ -1,0 +1,19 @@
+type: object
+required: [name, email, password]
+additionalProperties: false
+properties:
+  name:
+    type: string
+    minLength: 2
+    maxLength: 50
+    example: Jane Doe
+  email:
+    type: string
+    format: email
+    example: jane@example.com
+  password:
+    type: string
+    format: password
+    minLength: 6
+    maxLength: 128
+    writeOnly: true
