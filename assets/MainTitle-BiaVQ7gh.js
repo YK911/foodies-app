@@ -1,1 +1,0 @@
-import{j as c,c as i}from"./index-7ThUMZsC.js";const l="_title_1acu8_1",a={title:l},m=({as:t,children:s,className:e,...o})=>{const n=t??"h1";return c.jsx(n,{className:i(a.title,e),...o,children:s})};export{m as M};
