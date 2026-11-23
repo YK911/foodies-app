@@ -1,1 +1,0 @@
-import{j as n}from"./index-DSDmQkSD.js";import{c}from"./clsx-B-dksMZM.js";const l="_title_1acu8_1",r={title:l},p=({as:t,children:s,className:o,...e})=>{const i=t??"h1";return n.jsx(i,{className:c(r.title,o),...e,children:s})};export{p as M};
