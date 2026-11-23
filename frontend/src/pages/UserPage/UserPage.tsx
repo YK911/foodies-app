@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Loader, PathInfo } from '../../components/Common';
+import { Loader, PathInfo, MainTitle, Subtitle } from '../../components/Common';
 import ProfileHeader from '../../components/UserCard/ProfileHeader';
 import RecipePreview from '../../components/UserCard/RecipePreview';
 import UserCard from '../../components/UserCard/UserCard';
@@ -235,9 +235,16 @@ export default function UserPage() {
           </div>
         ) : (
           <>
-            <div className={styles.breadcrumb}>
-              <PathInfo items={[{ label: 'Home', to: '/' }, { label: profile.name }]} />
-            </div>
+            <header className={styles.profileIntro}>
+              <div className={styles.breadcrumb}>
+                <PathInfo items={[{ label: 'Home', to: '/' }, { label: 'Profile' }]} />
+              </div>
+              <MainTitle as="h1" className={styles.profileIntroTitle}>Profile</MainTitle>
+              <Subtitle className={styles.profileIntroSubtitle}>
+                Reveal your culinary art, share your favorite recipe and create gastronomic masterpieces with us.
+              </Subtitle>
+            </header>
+            <div className={styles.profileLayout}>
             <ProfileHeader
               user={profile}
               isOwn={own}
@@ -337,6 +344,7 @@ export default function UserPage() {
                 </nav>
               )}
             </section>
+            </div>
           </>
         )}
       </div>

@@ -18,10 +18,10 @@
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1440px;
 
-  --container-width: 1280px;
-  --container-padding-mobile: 16px;
-  --container-padding-tablet: 32px;
-  --container-padding-desktop: 40px;
+  --container-width-desk: 1312px;
+  --container-width-tab: 736px;
+  --container-width-mob: 375px;
+  --container-padding: 16px;
 
   --transition-duration: 250ms;
   --transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

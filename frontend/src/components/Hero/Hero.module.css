@@ -1,19 +1,37 @@
 .hero {
   position: relative;
   isolation: isolate;
-  max-width: 1400px;
-  height: 970px;
-  margin: 20px auto 0;
-  border-radius: 30px;
+  max-width: 360px;
+  width: 100%;
+  min-height: 796px;
+  margin: 8px auto 0;
+  padding: 194px 0 20px;
+  border-radius: 20px;
+
   background: var(--color-primary);
   color: var(--color-white);
   overflow: hidden;
+
+  @media screen and (min-width: 768px) {
+    max-width: 736px;
+    min-height: 992px;
+    margin: 16px auto 0;
+    padding-top: 217px;
+    border-radius: 30px;
+  }
+
+  @media screen and (min-width: 1440px) {
+    max-width: 1400px;
+    min-height: 970px;
+    margin: 20px auto 0;
+    padding-top: 154px;
+  }
 }
 .hero::before {
   content: '';
   position: absolute;
   z-index: -1;
-  inset: 0 60px;
+  inset: 0;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   pointer-events: none;
@@ -105,14 +123,11 @@
   white-space: nowrap;
 }
 .copy {
-  position: absolute;
-  top: 154px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(100% - 32px, 875px);
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: min(100% - 32px, 875px);
+  margin: 0 auto;
   text-align: center;
 }
 .copy h1 {
@@ -183,10 +198,6 @@
   object-fit: cover;
 }
 @media (max-width: 1439px) {
-  .hero {
-    height: 992px;
-    margin: 16px 16px 0;
-  }
   .header {
     padding: 20px 32px 0;
   }
@@ -205,11 +216,6 @@
   }
 }
 @media (max-width: 767px) {
-  .hero {
-    height: 796px;
-    margin: 8px 8px 0;
-    border-radius: 20px;
-  }
   .header {
     padding: 16px 16px 0;
     min-height: 54px;

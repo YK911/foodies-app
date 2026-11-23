@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import spriteUrl from '../../assets/icons/sprite.svg?url';
 import fe05Beef from '../../assets/images/beef.webp';
 import fe05Breakfast from '../../assets/images/breakfast.webp';
 import fe05Desserts from '../../assets/images/desserts.webp';
@@ -17,6 +16,7 @@ import fe05Starter from '../../assets/images/starter.webp';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchLookups } from '../../redux/meta/operations';
 import { MainTitle, Subtitle } from '../Common';
+import { Icon } from '../Icon/Icon';
 import { CATEGORY_PARAM } from '../Recipes';
 import css from './Categories.module.css';
 
@@ -92,41 +92,39 @@ export const Categories = () => {
   };
   return (
     <section className={css.categories} aria-labelledby="categories-title">
-      <div className={css.intro}>
-        <MainTitle as="h2" id="categories-title">
-          Categories
-        </MainTitle>
-        <Subtitle>
-          Discover a limitless world of culinary possibilities and enjoy exquisite recipes that
-          combine taste, style and the warm atmosphere of the kitchen.
-        </Subtitle>
-      </div>
-      <div className={css.grid}>
-        {cards.map((item, index) => (
-          <button
-            key={item.name}
-            className={`${css.card} ${item.wide && index < 11 ? css.wide : ''} ${index >= 8 ? css.mobileHidden : ''}`}
-            type="button"
-            onClick={() => choose(item.name)}
-            aria-label={`Browse ${item.name} recipes`}
-          >
-            <img src={item.image} alt="" loading="lazy" decoding="async" />
-            <span className={css.cardActions}>
-              <span className={css.name}>{item.name}</span>
-              <span className={css.arrow}>
-                <svg aria-hidden="true">
-                  <use href={`${spriteUrl}#arrow-up-right`} />
-                </svg>
+      <div className="container">
+        <div className={css.intro}>
+          <MainTitle as="h2" id="categories-title">
+            Categories
+          </MainTitle>
+          <Subtitle>
+            Discover a limitless world of culinary possibilities and enjoy exquisite recipes that
+            combine taste, style and the warm atmosphere of the kitchen.
+          </Subtitle>
+        </div>
+        <div className={css.grid}>
+          {cards.map((item, index) => (
+            <button
+              key={item.name}
+              className={`${css.card} ${item.wide && index < 11 ? css.wide : ''} ${index >= 8 ? css.mobileHidden : ''}`}
+              type="button"
+              onClick={() => choose(item.name)}
+              aria-label={`Browse ${item.name} recipes`}
+            >
+              <img src={item.image} alt="" loading="lazy" decoding="async" />
+              <span className={css.cardActions}>
+                <span className={css.name}>{item.name}</span>
+                <span className={css.arrow}>
+                  <Icon name="arrow-up-right" />
+                </span>
               </span>
-            </span>
+            </button>
+          ))}
+          <button className={css.allCategories} type="button" onClick={() => choose('')}>
+            All categories
+            <Icon name="arrow-up-right" />
           </button>
-        ))}
-        <button className={css.allCategories} type="button" onClick={() => choose('')}>
-          All categories
-          <svg aria-hidden="true">
-            <use href={`${spriteUrl}#arrow-up-right`} />
-          </svg>
-        </button>
+        </div>
       </div>
     </section>
   );

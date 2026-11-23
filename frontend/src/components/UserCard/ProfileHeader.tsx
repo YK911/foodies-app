@@ -67,7 +67,7 @@ export default function ProfileHeader({
         )}
       </div>
       <div className={styles.profileDetails}>
-        <MainTitle className={styles.profileName}>{user.name}</MainTitle>
+        <MainTitle as="h2" className={styles.profileName}>{user.name}</MainTitle>
         {user.email && <p className={styles.email}>{user.email}</p>}
         <dl className={styles.stats}>
           <div>

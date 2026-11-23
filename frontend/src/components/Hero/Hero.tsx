@@ -21,25 +21,27 @@ export const Hero = () => {
 
   return (
     <section className={css.hero} aria-labelledby="hero-title">
-      <div className={css.copy}>
-        <h1 id="hero-title">
-          Improve your
-          <br className={css.desktopBreak} /> culinary talents
-        </h1>
-        <p>
-          Amazing recipes for beginners in the world of cooking, enveloping you in the aromas and
-          tastes of various cuisines.
-        </p>
-        <button className={css.addButton} type="button" onClick={addRecipe}>
-          Add recipe
-        </button>
-      </div>
-      <div className={css.heroPhotos} aria-hidden="true">
-        <div className={css.photoSmall}>
-          <img src={heroSmall} alt="" loading="eager" decoding="async" />
+      <div className="container">
+        <div className={css.copy}>
+          <h1 id="hero-title">
+            Improve your
+            <br className={css.desktopBreak} /> culinary talents
+          </h1>
+          <p>
+            Amazing recipes for beginners in the world of cooking, enveloping you in the aromas and
+            tastes of various cuisines.
+          </p>
+          <button className={css.addButton} type="button" onClick={addRecipe}>
+            Add recipe
+          </button>
         </div>
-        <div className={css.photoMain}>
-          <img src={heroMain} alt="" loading="eager" decoding="async" />
+        <div className={css.heroPhotos} aria-hidden="true">
+          <div className={css.photoSmall}>
+            <img src={heroSmall} alt="" loading="eager" decoding="async" />
+          </div>
+          <div className={css.photoMain}>
+            <img src={heroMain} alt="" loading="eager" decoding="async" />
+          </div>
         </div>
       </div>
     </section>

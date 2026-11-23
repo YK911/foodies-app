@@ -77,7 +77,7 @@ export const Header = () => {
 
   return (
     <header className={clsx(css.header, isHomePage ? css.dark : css.light)}>
-      <div className={css.container}>
+      <div className={clsx('container', css.container)}>
         <Link className={css.logo} to="/" aria-label="Foodies home">
           foodies
         </Link>
