@@ -1,0 +1,73 @@
+type: object
+required:
+  - id
+  - title
+  - categoryName
+  - areaName
+  - instructions
+  - description
+  - time
+  - ownerId
+  - createdAt
+  - updatedAt
+  - owner
+  - _count
+properties:
+  id:
+    type: string
+    example: 6462a8f74c3d0ddd28897fcd
+  title:
+    type: string
+    example: Salmon Avocado Salad
+  categoryName:
+    type: string
+    example: Seafood
+  areaName:
+    type: string
+    example: Italian
+  instructions:
+    type: string
+    example: Sear the salmon and layer over spinach, avocado, and tomatoes.
+  description:
+    type: string
+    example: Healthy salmon salad with homemade lemon vinaigrette.
+  thumb:
+    type: string
+    nullable: true
+    example: https://res.cloudinary.com/demo/image/upload/salmon-salad.jpg
+  time:
+    type: string
+    example: '40'
+  ownerId:
+    type: string
+    example: 64c8d958249fae54bae90bb9
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time
+  owner:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        example: 64c8d958249fae54bae90bb9
+      name:
+        type: string
+        example: Nadia
+      avatar:
+        type: string
+        nullable: true
+        example: https://res.cloudinary.com/demo/image/upload/avatar.jpg
+  _count:
+    type: object
+    required:
+      - favorites
+    properties:
+      favorites:
+        type: integer
+        example: 12

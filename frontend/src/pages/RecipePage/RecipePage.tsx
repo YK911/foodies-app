@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hooks';
-import { getPopularRecipes, getRecipe, updateFavorite, type RecipeDetails } from '../../services/recipeDetailsApi';
+import {
+  getPopularRecipes,
+  getRecipe,
+  updateFavorite,
+  type RecipeDetails,
+} from '../../services/recipeDetailsApi';
 import { PathInfo, Loader } from '../../components/Common';
-import RecipeMainInfo from '../../components/RecipePage/RecipeMainInfo';
-import RecipeIngredients from '../../components/RecipePage/RecipeIngredients';
-import RecipePreparation from '../../components/RecipePage/RecipePreparation';
-import PopularRecipes from '../../components/RecipePage/PopularRecipes';
+import RecipeMainInfo from '../../components/RecipeDetails/RecipeMainInfo';
+import RecipeIngredients from '../../components/RecipeDetails/RecipeIngredients';
+import RecipePreparation from '../../components/RecipeDetails/RecipePreparation';
+import PopularRecipes from '../../components/RecipeDetails/PopularRecipes';
 import { getDemoPopularRecipes, getDemoRecipe, isDemoRecipeId } from './demoRecipeData';
 import './recipe-page.css';
 
@@ -37,15 +42,26 @@ export default function RecipePage() {
     setError(null);
     setFavoriteError(null);
     setLoading(true);
-    if (!id) { setError('Recipe ID is missing.'); setLoading(false); return () => controller.abort(); }
+    if (!id) {
+      setError('Recipe ID is missing.');
+      setLoading(false);
+      return () => controller.abort();
+    }
     getRecipe(id, controller.signal)
-      .then((result) => { if (!controller.signal.aborted) setRecipe(result); })
+      .then((result) => {
+        if (!controller.signal.aborted) setRecipe(result);
+      })
       .catch((err: unknown) => {
         if (controller.signal.aborted) return;
-        setError(isAxiosError(err) && err.response?.status === 404
-          ? 'Recipe not found.' : 'Unable to load this recipe. Please try again later.');
+        setError(
+          isAxiosError(err) && err.response?.status === 404
+            ? 'Recipe not found.'
+            : 'Unable to load this recipe. Please try again later.',
+        );
       })
-      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
     return () => controller.abort();
   }, [id, isDemo]);
 
@@ -60,9 +76,17 @@ export default function RecipePage() {
     setPopularError(null);
     setPopularLoading(true);
     getPopularRecipes(controller.signal)
-      .then((results) => { if (!controller.signal.aborted) setPopular(results.filter((item) => item.id !== id).slice(0, 4)); })
-      .catch(() => { if (!controller.signal.aborted) setPopularError('Popular recipes are currently unavailable.'); })
-      .finally(() => { if (!controller.signal.aborted) setPopularLoading(false); });
+      .then((results) => {
+        if (!controller.signal.aborted)
+          setPopular(results.filter((item) => item.id !== id).slice(0, 4));
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setPopularError('Popular recipes are currently unavailable.');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setPopularLoading(false);
+      });
     return () => controller.abort();
   }, [id, isDemo]);
 
@@ -70,7 +94,7 @@ export default function RecipePage() {
     if (!recipe || saving) return;
     setFavoriteError(null);
     if (isDemo) {
-      setRecipe((current) => current ? { ...current, isFavorite: !current.isFavorite } : current);
+      setRecipe((current) => (current ? { ...current, isFavorite: !current.isFavorite } : current));
       return;
     }
     if (!isAuthenticated) {
@@ -81,7 +105,9 @@ export default function RecipePage() {
     setSaving(true);
     try {
       await updateFavorite(recipe.id, next);
-      setRecipe((current) => current?.id === recipe.id ? { ...current, isFavorite: next } : current);
+      setRecipe((current) =>
+        current?.id === recipe.id ? { ...current, isFavorite: next } : current,
+      );
     } catch {
       setFavoriteError('Could not update favorites. Please try again.');
     } finally {
@@ -89,22 +115,46 @@ export default function RecipePage() {
     }
   };
 
-  return <main className="recipe-page">
-    <div className="recipe-container">
-      {loading ? <div className="recipe-page-message"><Loader label="Loading recipe" /></div> : error || !recipe ? (
-        <div className="recipe-page-message" role="alert"><h1>Recipe unavailable</h1><p>{error ?? 'Recipe not found.'}</p><Link to="/">Go home</Link></div>
-      ) : <>
-        <PathInfo className="recipe-path-info" items={[{ label: 'Home', to: '/' }, { label: recipe.title }]} />
-        <div className="recipe-content-grid">
-          <RecipeMainInfo recipe={recipe}>
-            <RecipeIngredients ingredients={recipe.ingredients} />
-            <RecipePreparation steps={recipe.instructions} isFavorite={recipe.isFavorite}
-              isAuthenticated={isAuthenticated || isDemo} isSaving={saving} onToggleFavorite={toggleFavorite} />
-            {favoriteError && <p role="alert" className="recipe-action-error">{favoriteError}</p>}
-          </RecipeMainInfo>
-        </div>
-      </>}
-      <PopularRecipes recipes={popular} isLoading={popularLoading} error={popularError} />
-    </div>
-  </main>;
+  return (
+    <main className="recipe-page">
+      <div className="recipe-container">
+        {loading ? (
+          <div className="recipe-page-message">
+            <Loader label="Loading recipe" />
+          </div>
+        ) : error || !recipe ? (
+          <div className="recipe-page-message" role="alert">
+            <h1>Recipe unavailable</h1>
+            <p>{error ?? 'Recipe not found.'}</p>
+            <Link to="/">Go home</Link>
+          </div>
+        ) : (
+          <>
+            <PathInfo
+              className="recipe-path-info"
+              items={[{ label: 'Home', to: '/' }, { label: recipe.title }]}
+            />
+            <div className="recipe-content-grid">
+              <RecipeMainInfo recipe={recipe}>
+                <RecipeIngredients ingredients={recipe.ingredients} />
+                <RecipePreparation
+                  steps={recipe.instructions}
+                  isFavorite={recipe.isFavorite}
+                  isAuthenticated={isAuthenticated || isDemo}
+                  isSaving={saving}
+                  onToggleFavorite={toggleFavorite}
+                />
+                {favoriteError && (
+                  <p role="alert" className="recipe-action-error">
+                    {favoriteError}
+                  </p>
+                )}
+              </RecipeMainInfo>
+            </div>
+          </>
+        )}
+        <PopularRecipes recipes={popular} isLoading={popularLoading} error={popularError} />
+      </div>
+    </main>
+  );
 }

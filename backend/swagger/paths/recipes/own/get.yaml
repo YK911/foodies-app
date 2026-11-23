@@ -1,0 +1,37 @@
+# GET /api/recipes/own
+tags:
+  - Recipes
+summary: Get current user's own recipes
+description: Returns a paginated list of recipes created by the authenticated user.
+operationId: getOwnRecipes
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    required: false
+    schema:
+      type: integer
+      minimum: 1
+      default: 1
+      example: 1
+  - in: query
+    name: perPage
+    required: false
+    schema:
+      type: integer
+      minimum: 1
+      maximum: 50
+      default: 9
+      example: 9
+responses:
+  '200':
+    description: Paginated list of own recipes
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/PaginatedRecipesResponse.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

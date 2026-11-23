@@ -1,0 +1,34 @@
+# POST /api/recipes/:id/favorite
+tags:
+  - Recipes
+summary: Add recipe to favorites
+description: Adds the specified recipe to the authenticated user's favorites list.
+operationId: addRecipeToFavorites
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: 6462a8f74c3d0ddd28897fcd
+responses:
+  '201':
+    description: Recipe added to favorites
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../components/schemas/FavoriteRecord.yaml'
+  '401':
+    $ref: '../../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../../components/responses/404.yaml'
+  '409':
+    description: Recipe is already in favorites
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../components/schemas/ErrorResponse.yaml'
+  '500':
+    $ref: '../../../../components/responses/500.yaml'

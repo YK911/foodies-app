@@ -1,0 +1,24 @@
+type: object
+required:
+  - recipes
+  - page
+  - perPage
+  - totalItems
+  - totalPages
+properties:
+  recipes:
+    type: array
+    items:
+      $ref: './RecipeDetails.yaml'
+  page:
+    type: integer
+    example: 1
+  perPage:
+    type: integer
+    example: 9
+  totalItems:
+    type: integer
+    example: 14
+  totalPages:
+    type: integer
+    example: 2

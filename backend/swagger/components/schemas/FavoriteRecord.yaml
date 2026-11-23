@@ -1,0 +1,19 @@
+type: object
+required:
+  - id
+  - userId
+  - recipeId
+  - createdAt
+properties:
+  id:
+    type: string
+    example: 8e4d12f0-9b1c-4a3e-9a0b-5d7c6e8f1a2b
+  userId:
+    type: string
+    example: 64c8d958249fae54bae90bb9
+  recipeId:
+    type: string
+    example: 6462a8f74c3d0ddd28897fcd
+  createdAt:
+    type: string
+    format: date-time

@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
 import clsx from 'clsx';
-import QuoteIcon from '../../../assets/icons/quote.svg?react';
-import { fetchTestimonials, type Testimonial } from '../../../services/testimonialsApi';
+import { useCallback, useEffect, useState } from 'react';
+import QuoteIcon from '../../assets/icons/quote.svg?react';
+import { fetchTestimonials, type Testimonial } from '../../services/testimonialsApi';
 import css from './Testimonials.module.css';
 
 const AUTOPLAY_INTERVAL_MS = 5000;

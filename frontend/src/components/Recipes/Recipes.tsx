@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import ArrowLeftIcon from '../../../assets/icons/arrow-left.svg?react';
-import { Loader, MainTitle, Subtitle } from '../../Common';
+import ArrowLeftIcon from '../../assets/icons/arrow-left.svg?react';
+import { Loader, MainTitle, Subtitle } from '../Common';
 import { RecipeFilters, type RecipeFiltersValue } from '../RecipeFilters';
 import { RecipeList } from '../RecipeList';
-import { RecipePagination } from '../../RecipePagination';
-import { fetchRecipes, type RecipesPage } from '../../../services/recipesApi';
-import { getErrorMessage } from '../../../utils/getErrorMessage';
-import { useMediaQuery } from '../../../hooks/useMediaQuery';
+import { RecipePagination } from '../RecipePagination';
+import { fetchRecipes, type RecipesPage } from '../../services/recipesApi';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import css from './Recipes.module.css';
 
 // URL search params are the single source of truth, so filters and page survive reloads

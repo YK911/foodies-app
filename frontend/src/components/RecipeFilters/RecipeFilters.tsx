@@ -1,8 +1,8 @@
 ﻿import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
-import { SelectField, type SelectOption } from '../../SelectField/SelectField';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { fetchLookups } from '../../../redux/meta/operations';
+import { SelectField, type SelectOption } from '../SelectField/SelectField';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { fetchLookups } from '../../redux/meta/operations';
 import css from './RecipeFilters.module.css';
 
 export interface RecipeFiltersValue {
@@ -86,4 +86,3 @@ export const RecipeFilters = ({ value, onChange, className }: RecipeFiltersProps
 };
 
 export default RecipeFilters;
-

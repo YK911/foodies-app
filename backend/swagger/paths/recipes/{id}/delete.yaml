@@ -1,0 +1,44 @@
+# DELETE /api/recipes/:id
+tags:
+  - Recipes
+summary: Delete own recipe
+description: Deletes a recipe owned by the authenticated user.
+operationId: deleteOwnRecipe
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: 6462a8f74c3d0ddd28897fcd
+responses:
+  '200':
+    description: Recipe successfully deleted
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - id
+            - message
+          properties:
+            id:
+              type: string
+              example: 6462a8f74c3d0ddd28897fcd
+            message:
+              type: string
+              example: Recipe successfully deleted
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '403':
+    description: Forbidden — user is not the recipe owner
+    content:
+      application/json:
+        schema:
+          $ref: '../../../components/schemas/ErrorResponse.yaml'
+  '404':
+    $ref: '../../../components/responses/404.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { RecipeCard } from '../../RecipeCard';
-import type { RecipeListItem } from '../../../services/recipesApi';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { fetchFavorites, toggleFavorite } from '../../../redux/favorites/operations';
-import { openAuthModal } from '../../../redux/ui/uiSlice';
+import { RecipeCard } from '../RecipeCard';
+import type { RecipeListItem } from '../../services/recipesApi';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { fetchFavorites, toggleFavorite } from '../../redux/favorites/operations';
+import { openAuthModal } from '../../redux/ui/uiSlice';
 import css from './RecipeList.module.css';
 
 interface RecipeListProps {

@@ -1,0 +1,38 @@
+# DELETE /api/recipes/:id/favorite
+tags:
+  - Recipes
+summary: Remove recipe from favorites
+description: Removes the specified recipe from the authenticated user's favorites list.
+operationId: removeRecipeFromFavorites
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: 6462a8f74c3d0ddd28897fcd
+responses:
+  '200':
+    description: Recipe removed from favorites
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - recipeId
+            - message
+          properties:
+            recipeId:
+              type: string
+              example: 6462a8f74c3d0ddd28897fcd
+            message:
+              type: string
+              example: Recipe successfully removed from favorites
+  '401':
+    $ref: '../../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../../components/responses/404.yaml'
+  '500':
+    $ref: '../../../../components/responses/500.yaml'

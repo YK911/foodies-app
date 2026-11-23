@@ -1,0 +1,29 @@
+# GET /api/recipes/popular
+tags:
+  - Recipes
+summary: Get popular recipes
+description: Returns the most popular recipes ordered by favorites count (descending) and creation date (descending). Public endpoint, no authorization required.
+operationId: getPopularRecipes
+security: []
+parameters:
+  - in: query
+    name: limit
+    required: false
+    description: Maximum number of popular recipes to return (clamped between 1 and 20).
+    schema:
+      type: integer
+      minimum: 1
+      maximum: 20
+      default: 4
+      example: 4
+responses:
+  '200':
+    description: List of popular recipes
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../../components/schemas/PopularRecipe.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

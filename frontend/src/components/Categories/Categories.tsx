@@ -1,20 +1,22 @@
-import fe05Starter from '../../../assets/images/fe05/starter.webp';
-import fe05Side from '../../../assets/images/fe05/side.webp';
-import fe05Seafood from '../../../assets/images/fe05/seafood.webp';
-import fe05Pork from '../../../assets/images/fe05/pork.webp';
-import fe05Pasta from '../../../assets/images/fe05/pasta.webp';
-import fe05Miscellaneous from '../../../assets/images/fe05/miscellaneous.webp';
-import fe05Goat from '../../../assets/images/fe05/goat.webp';
-import fe05Lamb from '../../../assets/images/fe05/lamb.webp';
-import fe05Desserts from '../../../assets/images/fe05/desserts.webp';
-import fe05Breakfast from '../../../assets/images/fe05/breakfast.webp';
-import fe05Beef from '../../../assets/images/fe05/beef.webp';
 import { useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import spriteUrl from '../../../assets/icons/sprite.svg?url';
-import { MainTitle, Subtitle } from '../../Common';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { fetchLookups } from '../../../redux/meta/operations';
+
+import spriteUrl from '../../assets/icons/sprite.svg?url';
+import fe05Beef from '../../assets/images/beef.webp';
+import fe05Breakfast from '../../assets/images/breakfast.webp';
+import fe05Desserts from '../../assets/images/desserts.webp';
+import fe05Goat from '../../assets/images/goat.webp';
+import fe05Lamb from '../../assets/images/lamb.webp';
+import fe05Miscellaneous from '../../assets/images/miscellaneous.webp';
+import fe05Pasta from '../../assets/images/pasta.webp';
+import fe05Pork from '../../assets/images/pork.webp';
+import fe05Seafood from '../../assets/images/seafood.webp';
+import fe05Side from '../../assets/images/side.webp';
+import fe05Starter from '../../assets/images/starter.webp';
+
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { fetchLookups } from '../../redux/meta/operations';
+import { MainTitle, Subtitle } from '../Common';
 import { CATEGORY_PARAM } from '../Recipes';
 import css from './Categories.module.css';
 
@@ -39,7 +41,9 @@ export const Categories = () => {
   const categories = useAppSelector((state) => state.meta.categories);
   const [, setSearchParams] = useSearchParams();
 
-  useEffect(() => { void dispatch(fetchLookups()); }, [dispatch]);
+  useEffect(() => {
+    void dispatch(fetchLookups());
+  }, [dispatch]);
   // Some API responses wrap the categories array in { data } or { categories }.
   // Redux state is typed as Category[], but runtime JSON may still have those wrappers.
   // Normalize before reading .length or calling .map so an unexpected response cannot
@@ -51,8 +55,11 @@ export const Categories = () => {
         if (Array.isArray(value)) {
           return value.filter(
             (entry): entry is { name: string } =>
-              typeof entry === 'object' && entry !== null &&
-              'name' in entry && typeof entry.name === 'string' && Boolean(entry.name.trim()),
+              typeof entry === 'object' &&
+              entry !== null &&
+              'name' in entry &&
+              typeof entry.name === 'string' &&
+              Boolean(entry.name.trim()),
           );
         }
         if (typeof value !== 'object' || value === null) break;
@@ -86,8 +93,13 @@ export const Categories = () => {
   return (
     <section className={css.categories} aria-labelledby="categories-title">
       <div className={css.intro}>
-        <MainTitle as="h2" id="categories-title">Categories</MainTitle>
-        <Subtitle>Discover a limitless world of culinary possibilities and enjoy exquisite recipes that combine taste, style and the warm atmosphere of the kitchen.</Subtitle>
+        <MainTitle as="h2" id="categories-title">
+          Categories
+        </MainTitle>
+        <Subtitle>
+          Discover a limitless world of culinary possibilities and enjoy exquisite recipes that
+          combine taste, style and the warm atmosphere of the kitchen.
+        </Subtitle>
       </div>
       <div className={css.grid}>
         {cards.map((item, index) => (
@@ -99,12 +111,21 @@ export const Categories = () => {
             aria-label={`Browse ${item.name} recipes`}
           >
             <img src={item.image} alt="" loading="lazy" decoding="async" />
-            <span className={css.cardActions}><span className={css.name}>{item.name}</span><span className={css.arrow}><svg aria-hidden="true"><use href={`${spriteUrl}#arrow-up-right`} /></svg></span></span>
+            <span className={css.cardActions}>
+              <span className={css.name}>{item.name}</span>
+              <span className={css.arrow}>
+                <svg aria-hidden="true">
+                  <use href={`${spriteUrl}#arrow-up-right`} />
+                </svg>
+              </span>
+            </span>
           </button>
         ))}
         <button className={css.allCategories} type="button" onClick={() => choose('')}>
           All categories
-          <svg aria-hidden="true"><use href={`${spriteUrl}#arrow-up-right`} /></svg>
+          <svg aria-hidden="true">
+            <use href={`${spriteUrl}#arrow-up-right`} />
+          </svg>
         </button>
       </div>
     </section>
