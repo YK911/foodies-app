@@ -160,127 +160,172 @@
   min-height: 250px;
   padding-top: 40px;
 }
-.recipesGrid {
+
+.recipesGrid,
+.peopleGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 48px 20px;
+  grid-template-columns: minmax(0, 1fr);
 }
-.recipeCard {
-  min-width: 0;
-}
-.recipeImage {
-  display: block;
-  overflow: hidden;
-  aspect-ratio: 1.18;
-  border-radius: 24px;
-  background: #ececec;
-}
-.recipeImage img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  transition: transform 0.2s;
-}
-.recipeImage:hover img {
-  transform: scale(1.04);
-}
-.imagePlaceholder {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  color: var(--color-secondary);
-}
-.cardTitleRow {
+.recipeCard,
+.personCard {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin-top: 16px;
+  padding: 20px 0;
 }
-.cardTitleRow h3 {
-  flex: 1;
-  min-width: 0;
-  font-size: 20px;
-  line-height: 1.3;
-  font-weight: var(--font-weight-extrabold);
-  text-transform: uppercase;
-  overflow-wrap: anywhere;
+.recipeCard:first-child,
+.personCard:first-child {
+  padding-top: 0;
 }
-.cardDescription {
-  margin: 10px 0;
-  color: var(--color-primary-light);
-  font-size: 14px;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
+.recipeCard + .recipeCard,
+.personCard + .personCard {
+  border-top: 1px solid #ddd;
 }
-.recipeAuthor {
-  font-size: 14px;
-  font-weight: var(--font-weight-bold);
-}
-.removeButton {
-  flex: none;
+.recipeImage,
+.latestRecipes a {
   display: grid;
   place-items: center;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  width: 33px;
-  height: 33px;
-  font-size: 24px;
-  line-height: 1;
+  flex: none;
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #eee;
 }
-.removeButton:hover {
-  background: #ffe8e8;
+.recipeImage img,
+.latestRecipes img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.peopleGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 20px;
+.imagePlaceholder {
+  text-align: center;
+  font-size: 12px;
 }
-.personCard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.cardTitleRow,
+.personInfo {
   min-width: 0;
-  padding: 22px;
-  border: 1px solid #eee;
-  border-radius: 20px;
-  background: var(--color-white);
+  overflow-wrap: anywhere;
 }
-.personLink {
+.cardTitleRow h3,
+.personInfo strong {
+  font-size: 16px;
+  text-transform: uppercase;
+}
+.cardDescription {
+  margin-top: 8px;
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.actions {
   display: flex;
-  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.iconButton {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #bfbebe;
+  color: var(--color-primary);
+}
+.iconButton svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+.iconButton:hover {
+  background: #eee;
+}
+.personCard > .iconButton {
+  margin-left: auto;
+}
+.identity {
+  display: flex;
+  align-items: flex-start;
   gap: 16px;
   min-width: 0;
+}
+.personLink {
+  flex: none;
 }
 .personAvatar,
 .personInitials {
   display: grid;
   place-items: center;
-  flex: none;
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
   border-radius: 50%;
   background: #eee;
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+  font-weight: bold;
 }
-.personLink strong,
-.personLink small {
-  display: block;
-  overflow-wrap: anywhere;
+.personInfo {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
 }
-.personLink strong {
-  font-size: 17px;
-}
-.personLink small {
-  margin-top: 6px;
+.personInfo small {
   color: var(--color-secondary);
-  font-size: 13px;
+}
+.personInfo button {
+  margin-top: 4px;
+}
+.latestRecipes {
+  display: none;
+}
+@media (min-width: 768px) {
+  .recipeCard,
+  .personCard {
+    gap: 16px;
+    padding: 40px 0;
+  }
+  .recipeImage,
+  .latestRecipes a {
+    width: 100px;
+    height: 100px;
+  }
+  .personAvatar,
+  .personInitials {
+    width: 85px;
+    height: 85px;
+  }
+  .cardTitleRow h3,
+  .personInfo strong {
+    font-size: 20px;
+  }
+  .iconButton {
+    width: 42px;
+    height: 42px;
+  }
+  .personCard {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) auto minmax(42px, 1fr);
+  }
+  .personCard > .iconButton {
+    grid-column: 3;
+  }
+  .latestRecipes {
+    display: flex;
+    list-style: none;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+  }
+  .latestRecipes li:nth-child(n + 4) {
+    display: none;
+  }
+}
+@media (min-width: 1440px) {
+  .latestRecipes li:nth-child(4) {
+    display: block;
+  }
 }
 .pagination {
   display: flex;
@@ -322,12 +367,6 @@
 @media (max-width: 1100px) {
   .profileHeader {
     gap: 30px;
-  }
-  .recipesGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .peopleGrid {
-    grid-template-columns: 1fr;
   }
   .stats {
     gap: 16px 28px;
@@ -383,28 +422,6 @@
   .panel {
     padding-top: 28px;
   }
-  .recipesGrid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  .recipeImage {
-    aspect-ratio: 1.16;
-  }
-  .personCard {
-    padding: 14px;
-    gap: 8px;
-  }
-  .personLink {
-    gap: 10px;
-  }
-  .personAvatar,
-  .personInitials {
-    width: 44px;
-    height: 44px;
-  }
-  .personLink strong {
-    font-size: 14px;
-  }
   .outlineButton {
     min-height: 38px;
     padding: 8px 12px;
@@ -423,29 +440,5 @@
   .darkButton,
   .outlineButton {
     transition: none;
-  }
-}
-
-.latestRecipes {
-  display: none;
-}
-@media (min-width: 768px) {
-  .personCard {
-    flex-wrap: wrap;
-  }
-  .latestRecipes {
-    display: flex;
-    gap: 8px;
-    order: 1;
-    width: 100%;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .latestRecipes img {
-    width: 52px;
-    height: 52px;
-    object-fit: cover;
-    border-radius: 8px;
   }
 }

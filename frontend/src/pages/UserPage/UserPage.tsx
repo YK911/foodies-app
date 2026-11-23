@@ -17,6 +17,7 @@ import {
   type ProfileUser,
   type ProfileUserCard,
 } from '../../services/userProfileApi';
+import { removeFromFavorites } from '../../services/recipesApi';
 import styles from './UserPage.module.css';
 
 const TABS: { id: ProfileTab; label: string }[] = [
@@ -45,6 +46,7 @@ export default function UserPage() {
   const [profileError, setProfileError] = useState<string | null>(null);
   const [tab, setTab] = useState<ProfileTab>('recipes');
   const [page, setPage] = useState(1);
+  const [listRevision, setListRevision] = useState(0);
   const [items, setItems] = useState<Array<ProfileRecipe | ProfileUserCard>>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [tabLoading, setTabLoading] = useState(true);
@@ -65,7 +67,6 @@ export default function UserPage() {
   );
 
   useEffect(() => {
-    const controller = new AbortController();
     setProfile(null);
     setActionError(null);
     setAvatarPreview(null);
@@ -75,6 +76,10 @@ export default function UserPage() {
     setPage(1);
     setProfileLoading(true);
     setProfileError(null);
+  }, [id, own]);
+
+  useEffect(() => {
+    const controller = new AbortController();
     if (!id) {
       setProfileError('User ID is missing.');
       setProfileLoading(false);
@@ -95,7 +100,7 @@ export default function UserPage() {
         if (!controller.signal.aborted) setProfileLoading(false);
       });
     return () => controller.abort();
-  }, [id, own]);
+  }, [id, own, listRevision]);
 
   useEffect(() => {
     if (!id) return;
@@ -108,6 +113,10 @@ export default function UserPage() {
     request
       .then((data) => {
         if (!controller.signal.aborted) {
+          if (page > Math.max(1, data.totalPages)) {
+            setPage(Math.max(1, data.totalPages));
+            return;
+          }
           setItems(data.items);
           setTotalPages(Math.max(1, data.totalPages));
         }
@@ -119,7 +128,7 @@ export default function UserPage() {
         if (!controller.signal.aborted) setTabLoading(false);
       });
     return () => controller.abort();
-  }, [id, tab, page]);
+  }, [id, tab, page, listRevision]);
 
   const changeTab = (next: ProfileTab) => {
     if (tab === next) return;
@@ -150,8 +159,7 @@ export default function UserPage() {
     if (busy || !isAuthenticated || userId === authUser?.id) return;
 
     const person = items.find((item) => isPerson(item) && item.id === userId) as
-      | ProfileUserCard
-      | undefined;
+      ProfileUserCard | undefined;
     if (!person) return;
     const previous = followOverrides[userId] ?? person.isFollowing;
     const next = !previous;
@@ -168,18 +176,20 @@ export default function UserPage() {
     }
   };
   const removeRecipe = async (recipeId: string) => {
-    if (!own || busy || tab !== 'recipes' || !window.confirm('Delete this recipe?')) return;
+    if (!own || busy || !isRecipeTab(tab)) return;
+    const favorite = tab === 'favorites';
+    if (!favorite && !window.confirm('Delete this recipe?')) return;
+
     setActionError(null);
     setBusy(recipeId);
     try {
-      await deleteOwnRecipe(recipeId);
-
-      setItems((current) => current.filter((item) => item.id !== recipeId));
-      setProfile(
-        (current) => current && { ...current, recipesCount: Math.max(0, current.recipesCount - 1) },
-      );
+      if (favorite) await removeFromFavorites(recipeId);
+      else await deleteOwnRecipe(recipeId);
+      setListRevision((revision) => revision + 1);
     } catch {
-      setActionError('Unable to delete this recipe.');
+      setActionError(
+        favorite ? 'Unable to remove this favorite.' : 'Unable to delete this recipe.',
+      );
     } finally {
       setBusy(null);
     }
@@ -283,7 +293,8 @@ export default function UserPage() {
                       <RecipePreview
                         key={recipe.id}
                         recipe={recipe}
-                        canRemove={own && tab === 'recipes'}
+                        canRemove={own}
+                        favorite={tab === 'favorites'}
                         busy={busy === recipe.id}
                         onRemove={removeRecipe}
                       />
