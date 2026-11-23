@@ -5,7 +5,7 @@
 
 .dark {
   position: absolute;
-  top: 20px;
+  top: 40px;
   left: 50%;
   transform: translateX(-50%);
   color: var(--color-white);
@@ -293,29 +293,12 @@
 }
 
 @media (max-width: 1439px) {
-  .dark {
-    top: 16px;
-  }
-
-  .container {
-    padding: 20px 32px 0;
-  }
-
   .light .container {
     padding: 0 var(--container-padding-tablet);
   }
 }
 
 @media (max-width: 767px) {
-  .dark {
-    top: 8px;
-  }
-
-  .container {
-    padding: 16px 24px 0;
-    min-height: 54px;
-  }
-
   .light .container {
     padding: 0 var(--container-padding-mobile);
   }
