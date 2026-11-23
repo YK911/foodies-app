@@ -6,7 +6,8 @@ import PopularRecipes from '../../components/RecipeDetails/PopularRecipes';
 import RecipeIngredients from '../../components/RecipeDetails/RecipeIngredients';
 import RecipeMainInfo from '../../components/RecipeDetails/RecipeMainInfo';
 import RecipePreparation from '../../components/RecipeDetails/RecipePreparation';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { openAuthModal } from '../../redux/ui/uiSlice';
 import {
   getPopularRecipes,
   getRecipe,
@@ -17,6 +18,7 @@ import './recipe-page.css';
 
 export default function RecipePage() {
   const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuth);
   const [recipe, setRecipe] = useState<RecipeDetails | null>(null);
   const [popular, setPopular] = useState<RecipeDetails[]>([]);
@@ -81,7 +83,7 @@ export default function RecipePage() {
     setFavoriteError(null);
 
     if (!isAuthenticated) {
-      setFavoriteError('Please sign in to add recipes to your favorites.');
+      dispatch(openAuthModal('signIn'));
       return;
     }
     const next = !recipe.isFavorite;
@@ -123,7 +125,6 @@ export default function RecipePage() {
                 <RecipePreparation
                   steps={recipe.instructions}
                   isFavorite={recipe.isFavorite}
-                  isAuthenticated={isAuthenticated}
                   isSaving={saving}
                   onToggleFavorite={toggleFavorite}
                 />
