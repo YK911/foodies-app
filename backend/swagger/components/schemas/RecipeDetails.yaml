@@ -65,9 +65,9 @@ properties:
         type: string
         nullable: true
   category:
-    $ref: './Category.yaml'
+    $ref: '#/components/schemas/Category'
   area:
-    $ref: './Area.yaml'
+    $ref: '#/components/schemas/Area'
   ingredients:
     type: array
     items:
@@ -89,7 +89,7 @@ properties:
           type: string
           example: 200g
         ingredient:
-          $ref: './Ingredient.yaml'
+          $ref: '#/components/schemas/Ingredient'
   _count:
     type: object
     required:

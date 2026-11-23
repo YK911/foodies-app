@@ -85,6 +85,10 @@ paths:
                 $ref: '#/components/schemas/UserSummary'
         '400':
           description: Invalid image file
+        '413':
+          description: Image exceeds the upload limit
+        '502':
+          description: Image storage provider rejected the upload
         '401':
           description: Unauthorized
         '500':
@@ -348,6 +352,10 @@ components:
           type: string
           nullable: true
         recipesCount:
+          type: integer
+        favoritesCount:
+          type: integer
+        followingCount:
           type: integer
         followersCount:
           type: integer

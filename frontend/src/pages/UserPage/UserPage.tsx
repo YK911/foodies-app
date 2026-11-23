@@ -88,7 +88,7 @@ export default function UserPage() {
       setProfileLoading(false);
       return () => controller.abort();
     }
-    getProfile(id, controller.signal)
+    getProfile(own ? 'current' : id, controller.signal)
       .then((user) => {
         if (!controller.signal.aborted) {
           setProfile(user);
@@ -102,7 +102,7 @@ export default function UserPage() {
         if (!controller.signal.aborted) setProfileLoading(false);
       });
     return () => controller.abort();
-  }, [id, demo]);
+  }, [id, demo, own]);
 
   useEffect(() => {
     if (!id) return;
@@ -306,7 +306,7 @@ export default function UserPage() {
                         key={user.id}
                         user={user}
                         isFollowing={followOverrides[user.id] ?? user.isFollowing}
-                        isAuthenticated={isAuthenticated || demo}
+                        isAuthenticated={(isAuthenticated || demo) && user.id !== authUser?.id}
                         busy={busy === user.id}
                         onFollow={followPerson}
                         isDemo={demo}

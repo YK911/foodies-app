@@ -32,7 +32,7 @@ export const demoRecipes: ProfileRecipe[] = names.map((title, i) => ({
 export const demoPeople: ProfileUserCard[] = [
   'Sophia Green', 'Oliver Scott', 'Olivia Taylor', 'Mason Hill', 'Emma Brown', 'Lucas Martin',
   'Amelia White', 'Henry Ford', 'Isabella King', 'James Wilson', 'Charlotte Hall', 'Ethan Young',
-].map((name, i) => ({ id: `user-${i + 1}`, name, avatar: null, recipesCount: 4 + i * 2, isFollowing: i % 3 === 0 }));
+].map((name, i) => ({ id: `user-${i + 1}`, name, avatar: null, recipes: demoRecipes.slice(0, 4), recipesCount: 4 + i * 2, isFollowing: i % 3 === 0 }));
 
 export const demoTab = (
   tab: ProfileTab, page: number, limit: number, deletedRecipeIds: string[] = [],
@@ -41,5 +41,5 @@ export const demoTab = (
   const source = tab === 'favorites' ? demoRecipes.slice(0, 8) : tab === 'recipes' ? availableRecipes : demoPeople;
   const count = source.length;
   const items = source.slice((page - 1) * limit, page * limit);
-  return { items, page, total: count, totalPages: Math.max(1, Math.ceil(count / limit)) };
+  return { items, page, limit, total: count, totalPages: Math.max(1, Math.ceil(count / limit)) };
 };

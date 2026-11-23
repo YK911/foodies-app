@@ -1,7 +1,7 @@
 ﻿import { prisma } from '../db/prisma.js';
 import createHttpError from 'http-errors';
 import { Prisma } from '@prisma/client';
-import cloudinary from '../utils/cloudinary.js';
+import { uploadImageBuffer } from '../utils/cloudinary.js';
 
 // GET /api/users/:id
 // Returns another user's profile with recipe and follower counts.
@@ -19,6 +19,8 @@ export const getPublicUserProfile = async (
       _count: {
         select: {
           recipes: true,
+          favorites: true,
+          following: true,
           followers: true,
         },
       },
@@ -36,6 +38,8 @@ export const getPublicUserProfile = async (
     name: user.name,
     email: user.email,
     avatar: user.avatar,
+    favoritesCount: user._count.favorites,
+    followingCount: user._count.following,
     recipesCount: user._count.recipes,
     followersCount: user._count.followers,
     isFollowing: user.followers.length > 0,
@@ -82,6 +86,7 @@ export const getUserFollowers = async (
   userId: string,
   page: number,
   limit: number,
+  viewerId = userId,
 ) => {
   const where = { followingId: userId };
   const skip = (page - 1) * limit;
@@ -102,7 +107,7 @@ export const getUserFollowers = async (
             },
             recipes: {
               take: 4,
-              orderBy: { createdAt: 'desc' },
+              orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
               select: {
                 id: true,
                 title: true,
@@ -110,13 +115,13 @@ export const getUserFollowers = async (
               },
             },
             followers: {
-              where: { followerId: userId },
+              where: { followerId: viewerId },
               select: { id: true },
             },
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     }),
     prisma.follower.count({ where }),
   ]);
@@ -143,6 +148,7 @@ export const getUserFollowing = async (
   userId: string,
   page: number,
   limit: number,
+  viewerId = userId,
 ) => {
   const where = { followerId: userId };
   const skip = (page - 1) * limit;
@@ -155,6 +161,7 @@ export const getUserFollowing = async (
       select: {
         following: {
           select: {
+            followers: { where: { followerId: viewerId }, select: { id: true } },
             id: true,
             name: true,
             avatar: true,
@@ -163,7 +170,7 @@ export const getUserFollowing = async (
             },
             recipes: {
               take: 4,
-              orderBy: { createdAt: 'desc' },
+              orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
               select: {
                 id: true,
                 title: true,
@@ -173,7 +180,7 @@ export const getUserFollowing = async (
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     }),
     prisma.follower.count({ where }),
   ]);
@@ -185,7 +192,7 @@ export const getUserFollowing = async (
       avatar: user.avatar,
       recipesCount: user._count.recipes,
       recipes: user.recipes,
-      isFollowing: true,
+      isFollowing: user.followers.length > 0,
     })),
     page,
     limit,
@@ -271,31 +278,12 @@ export const updateUserAvatar = async (
     throw createHttpError(404, 'User not found');
   }
 
-  const uploadResult = await new Promise<{ secure_url: string }>(
-    (resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'foodies/avatars',
-          resource_type: 'image',
-        },
-        (error, result) => {
-          if (error || !result) {
-            reject(error ?? new Error('Avatar upload failed'));
-            return;
-          }
-
-          resolve({ secure_url: result.secure_url });
-        },
-      );
-
-      uploadStream.end(file.buffer);
-    },
-  );
+  const avatar = await uploadImageBuffer(file.buffer, 'foodies/avatars');
 
   return prisma.user.update({
     where: { id: userId },
     data: {
-      avatar: uploadResult.secure_url,
+      avatar,
     },
     select: {
       id: true,

@@ -9,7 +9,7 @@ properties:
   recipes:
     type: array
     items:
-      $ref: './RecipeDetails.yaml'
+      $ref: '#/components/schemas/RecipeDetails'
   page:
     type: integer
     example: 1

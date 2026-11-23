@@ -6,6 +6,8 @@ import type { CreateRecipeInput } from '../validation/recipeSchemas.js';
 
 interface GetRecipesParams {
   category?: string;
+  area?: string;
+  ingredient?: string;
   ingredientId?: string;
   areaId?: string;
   page: number;
@@ -49,6 +51,8 @@ const recipeDetailsInclude = {
 // GET /api/recipes
 export const getRecipes = async ({
   category,
+  area,
+  ingredient,
   ingredientId,
   areaId,
   page,
@@ -58,17 +62,15 @@ export const getRecipes = async ({
     ...(category && {
       categoryName: category,
     }),
-    ...(ingredientId && {
+    ...((ingredientId || ingredient) && {
       ingredients: {
-        some: {
-          ingredientId,
-        },
+        some: ingredientId
+          ? { ingredientId }
+          : { ingredient: { OR: [{ id: ingredient }, { name: ingredient }] } },
       },
     }),
-    ...(areaId && {
-      area: {
-        id: areaId,
-      },
+    ...((areaId || area) && {
+      area: areaId ? { id: areaId } : { OR: [{ id: area }, { name: area }] },
     }),
   };
 
@@ -77,9 +79,7 @@ export const getRecipes = async ({
       where,
       skip: (page - 1) * perPage,
       take: perPage,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       include: recipeDetailsInclude,
     }),
     prisma.recipe.count({ where }),
@@ -134,9 +134,7 @@ export const getOwnRecipes = async ({ userId, page, perPage }: GetOwnRecipesPara
       where,
       skip: (page - 1) * perPage,
       take: perPage,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       include: recipeDetailsInclude,
     }),
     prisma.recipe.count({ where }),
@@ -247,9 +245,7 @@ export const getFavoriteRecipes = async ({ userId, page, perPage }: GetFavoriteR
       where,
       skip: (page - 1) * perPage,
       take: perPage,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       select: {
         recipe: {
           include: recipeDetailsInclude,

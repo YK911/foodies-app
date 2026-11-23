@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getUserById,
+  getProfileTab,
   getCurrentUser,
   getFollowers,
   getFollowing,
@@ -21,7 +22,8 @@ usersRouter.patch('/avatar', authenticate, uploadAvatar, updateAvatar);
 usersRouter.post('/:id/follow', authenticate, followUserController);
 usersRouter.delete('/:id/follow', authenticate, unfollowUserController);
 
-// Privat route
+usersRouter.get('/:id/:tab(recipes|favorites|followers|following)', authenticate, getProfileTab);
+
 usersRouter.get('/:id', authenticate, getUserById);
 
 export default usersRouter;

@@ -1,0 +1,20 @@
+type: object
+required: [items, page, limit, total, totalPages]
+properties:
+  items:
+    type: array
+    items:
+      type: object
+      required: [id, title, description, thumb, ownerId, ownerName, ownerAvatar]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        thumb: { type: [string, 'null'] }
+        ownerId: { type: string }
+        ownerName: { type: string }
+        ownerAvatar: { type: [string, 'null'] }
+  page: { type: integer }
+  limit: { type: integer }
+  total: { type: integer }
+  totalPages: { type: integer }

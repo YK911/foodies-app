@@ -54,3 +54,10 @@
 @media(max-width:1100px) {.profileHeader{gap:30px}.recipesGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.peopleGrid{grid-template-columns:1fr}.stats{gap:16px 28px}}
 @media(max-width:600px) {.page{padding:70px 0 80px}.breadcrumb{margin-bottom:30px}.profileHeader{flex-direction:column;align-items:center;gap:26px;margin-bottom:48px;text-align:center}.avatarWrap{width:110px;height:110px}.avatarFallback{font-size:32px}.avatarUpload{width:32px;height:32px;right:0;bottom:0}.profileName{font-size:25px}.stats{justify-content:center;gap:12px 22px}.stats div{min-width:65px}.stats dd{font-size:18px}.tabs{gap:22px}.tab{font-size:14px;padding:15px 0}.panel{padding-top:28px}.recipesGrid{grid-template-columns:1fr;gap:30px}.recipeImage{aspect-ratio:1.16}.personCard{padding:14px;gap:8px}.personLink{gap:10px}.personAvatar,.personInitials{width:44px;height:44px}.personLink strong{font-size:14px}.outlineButton{min-height:38px;padding:8px 12px;font-size:11px}.pagination{gap:12px;font-size:12px}.pagination button{padding:8px 12px}}
 @media(prefers-reduced-motion:reduce){.recipeImage img,.darkButton,.outlineButton{transition:none}}
+
+.latestRecipes {display:none}
+@media(min-width:768px) {
+  .personCard {flex-wrap:wrap}
+  .latestRecipes {display:flex;gap:8px;order:1;width:100%;list-style:none;padding:0;margin:0}
+  .latestRecipes img {width:52px;height:52px;object-fit:cover;border-radius:8px}
+}

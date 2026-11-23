@@ -1,6 +1,5 @@
 import api from './api';
 
-// FE-09 frontend contract. Align these endpoints and response fields with BE-07 when merged.
 export interface ProfileUser {
   id: string;
   name: string;
@@ -28,20 +27,20 @@ export interface ProfileUserCard {
   name: string;
   avatar: string | null;
   recipesCount: number;
+  recipes: Pick<ProfileRecipe, 'id' | 'title' | 'thumb'>[];
   isFollowing: boolean;
 }
 
 export interface Paginated<T> {
   items: T[];
   page: number;
+  limit: number;
   totalPages: number;
   total: number;
 }
 
 export type ProfileTab = 'recipes' | 'favorites' | 'followers' | 'following';
 
-// Expected backend: GET /users/:id, GET /users/:id/:tab?page=N&limit=N.
-// All requests go through the team's authenticated axios instance.
 export const getProfile = async (id: string, signal?: AbortSignal): Promise<ProfileUser> =>
   (await api.get<ProfileUser>(`/users/${encodeURIComponent(id)}`, { signal })).data;
 
@@ -53,22 +52,19 @@ export const getProfileTab = async (
     { params: { page, limit }, signal },
   )).data;
 
-// Expected backend: POST and DELETE /users/:id/follow
 export const setFollow = async (id: string, following: boolean): Promise<void> => {
   const url = `/users/${encodeURIComponent(id)}/follow`;
   if (following) await api.post(url);
   else await api.delete(url);
 };
 
-// Expected backend: PATCH /users/me/avatar, multipart field "avatar".
 export const uploadAvatar = async (file: File): Promise<string> => {
   const form = new FormData();
   form.append('avatar', file);
-  const { data } = await api.patch<{ avatar: string }>('/users/me/avatar', form);
+  const { data } = await api.patch<{ avatar: string }>('/users/avatar', form);
   return data.avatar;
 };
 
-// Expected backend: DELETE /recipes/:id (only for own recipes)
 export const deleteOwnRecipe = async (id: string): Promise<void> => {
   await api.delete(`/recipes/${encodeURIComponent(id)}`);
 };

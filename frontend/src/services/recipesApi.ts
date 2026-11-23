@@ -62,11 +62,6 @@ export const createRecipe = async (recipe: NewRecipe): Promise<string> => {
 
 // ---------------------------------------------------------------------------
 // Recipe search and favorites.
-// The backend routes are not merged yet. The client assumes:
-//   GET    /recipes?category=&area=&ingredient=&page=&limit=  -> { total, page, limit, recipes }
-//   GET    /recipes/favorites                                 -> recipes (array or wrapper)
-//   POST   /recipes/:id/favorite
-//   DELETE /recipes/:id/favorite
 // Parsing below accepts the usual wrapper and field-name variants, so small backend
 // differences do not break the UI.
 // ---------------------------------------------------------------------------
@@ -165,7 +160,7 @@ export const fetchRecipes = async (
 
   const body = Array.isArray(data) ? { recipes: data } : asRecord(data);
   const recipes = toRecipes(pickArray(body));
-  const total = asNumber(body.total ?? body.totalCount ?? body.count) ?? recipes.length;
+  const total = asNumber(body.totalItems ?? body.total ?? body.totalCount ?? body.count) ?? recipes.length;
   const totalPages =
     asNumber(body.totalPages ?? body.pages) ?? Math.max(1, Math.ceil(total / limit));
 

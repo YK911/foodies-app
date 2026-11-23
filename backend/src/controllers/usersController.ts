@@ -9,6 +9,48 @@ import {
   unfollowUser,
   updateUserAvatar,
 } from '../services/usersService.js';
+import { prisma } from '../db/prisma.js';
+import { getFavoriteRecipes, getOwnRecipes } from '../services/recipesService.js';
+
+export const getProfileTab = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const viewerId = req.user?.id;
+    if (!viewerId) throw createHttpError(401, 'Unauthorized');
+
+    const { id, tab } = req.params;
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit ?? 6);
+    const validPage = Number.isSafeInteger(page) && page >= 1;
+    const validLimit = Number.isInteger(limit) && limit >= 1 && limit <= 50;
+    if (!validPage || !validLimit || (page - 1) * limit > 2_147_483_647) {
+      throw createHttpError(400, 'Invalid pagination parameters');
+    }
+
+    const profile = await prisma.user.findUnique({ where: { id }, select: { id: true } });
+    if (!profile) throw createHttpError(404, 'User not found');
+
+    if (tab === 'followers' || tab === 'following') {
+      const getPeople = tab === 'followers' ? getUserFollowers : getUserFollowing;
+      res.json(await getPeople(id, page, limit, viewerId));
+      return;
+    }
+
+    const getList = tab === 'recipes' ? getOwnRecipes : getFavoriteRecipes;
+    const { recipes, totalItems, totalPages } = await getList({ userId: id, page, perPage: limit });
+    const items = recipes.map(({ id, title, description, thumb, owner }) => ({
+      id,
+      title,
+      description,
+      thumb,
+      ownerId: owner.id,
+      ownerName: owner.name,
+      ownerAvatar: owner.avatar,
+    }));
+    res.json({ items, page, limit, total: totalItems, totalPages });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {

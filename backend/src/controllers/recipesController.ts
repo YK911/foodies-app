@@ -31,6 +31,8 @@ export const getRecipesController = async (req: Request, res: Response, next: Ne
       category,
       ingredientId,
       areaId,
+      ingredient: typeof req.query.ingredient === 'string' ? req.query.ingredient : undefined,
+      area: typeof req.query.area === 'string' ? req.query.area : undefined,
       page,
       perPage,
     });

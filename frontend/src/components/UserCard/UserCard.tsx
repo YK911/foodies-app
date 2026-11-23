@@ -45,6 +45,17 @@ export default function UserCard({
           <small>{user.recipesCount} recipes</small>
         </span>
       </Link>
+      {user.recipes.length > 0 && (
+        <ul className={styles.latestRecipes} aria-label="Latest recipes">
+          {user.recipes.map((recipe) => (
+            <li key={recipe.id}>
+              <Link to={isDemo ? '/recipe/test' : `/recipe/${recipe.id}`} aria-label={recipe.title}>
+                {recipe.thumb ? <img src={recipe.thumb} alt="" loading="lazy" /> : recipe.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
       <button
         type="button"
         className={styles.outlineButton}

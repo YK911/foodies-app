@@ -1,0 +1,41 @@
+tags: [Recipes]
+summary: Search recipes by category, ingredient and area
+operationId: searchRecipes
+parameters:
+  - in: query
+    name: category
+    description: Category name
+    schema: { type: string }
+  - in: query
+    name: ingredient
+    description: Ingredient ID or name
+    schema: { type: string }
+  - in: query
+    name: ingredientId
+    description: Ingredient ID (takes precedence over ingredient)
+    schema: { type: string }
+  - in: query
+    name: area
+    description: Area ID or name
+    schema: { type: string }
+  - in: query
+    name: areaId
+    description: Area ID (takes precedence over area)
+    schema: { type: string }
+  - in: query
+    name: page
+    schema: { type: integer, minimum: 1, default: 1 }
+  - in: query
+    name: perPage
+    schema: { type: integer, minimum: 1, maximum: 50, default: 12 }
+  - in: query
+    name: limit
+    description: Alias for perPage
+    schema: { type: integer, minimum: 1, maximum: 50 }
+responses:
+  '200':
+    description: Matching recipes and total result count
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/PaginatedRecipesResponse'
