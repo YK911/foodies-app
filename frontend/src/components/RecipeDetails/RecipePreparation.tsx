@@ -1,11 +1,10 @@
 interface Props {
   steps: string[];
   isFavorite: boolean;
-  isAuthenticated: boolean;
   isSaving: boolean;
   onToggleFavorite: () => void;
 }
-export default function RecipePreparation({ steps, isFavorite, isAuthenticated, isSaving, onToggleFavorite }: Props) {
+export default function RecipePreparation({ steps, isFavorite, isSaving, onToggleFavorite }: Props) {
   return (
     <section aria-labelledby="preparation-heading" className="recipe-preparation-section">
       <h2 id="preparation-heading" className="recipe-section-title">Recipe Preparation</h2>
@@ -17,7 +16,6 @@ export default function RecipePreparation({ steps, isFavorite, isAuthenticated, 
         aria-label={isFavorite ? 'Remove recipe from favorites' : 'Add recipe to favorites'}>
         {isSaving ? 'Saving…' : isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       </button>
-      {!isAuthenticated && <p className="recipe-muted recipe-favorite-hint">Sign in to save this recipe.</p>}
     </section>
   );
 }
