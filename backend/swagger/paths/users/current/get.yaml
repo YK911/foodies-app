@@ -1,0 +1,17 @@
+﻿tags: [Users]
+summary: Get current user profile
+description: Returns the authenticated user's profile and activity counters.
+operationId: getCurrentUser
+security:
+  - bearerAuth: []
+responses:
+  '200':
+    description: Current user profile
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CurrentUserProfile'
+  '401':
+    description: Unauthorized
+  '404':
+    description: User not found

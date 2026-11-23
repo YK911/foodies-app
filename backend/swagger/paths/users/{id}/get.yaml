@@ -1,0 +1,27 @@
+﻿tags: [Users]
+summary: Get user profile by ID
+description: Returns an authenticated user's profile with email, avatar, recipe and follower counts, and following status.
+operationId: getUserById
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    description: User ID
+    schema:
+      type: string
+      format: uuid
+responses:
+  '200':
+    description: User profile retrieved successfully
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/PublicUserProfile'
+  '401':
+    description: Unauthorized
+  '404':
+    description: User not found
+  '500':
+    description: Internal Server Error

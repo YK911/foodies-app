@@ -1,0 +1,22 @@
+﻿tags: [Recipes]
+summary: Get recipe by ID
+operationId: getRecipeById
+parameters:
+  - in: path
+    name: id
+    required: true
+    description: Recipe ID
+    schema:
+      type: string
+      example: 6462a8f74c3d0ddd28897fcd
+responses:
+  '200':
+    description: Recipe details retrieved successfully
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/RecipeDetails'
+  '400':
+    description: Invalid recipe ID
+  '404':
+    description: Recipe not found
