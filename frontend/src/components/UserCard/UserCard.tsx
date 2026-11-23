@@ -8,19 +8,11 @@ interface Props {
   busy: boolean;
   isAuthenticated: boolean;
   onFollow: (id: string) => void;
-  isDemo: boolean;
 }
-export default function UserCard({
-  user,
-  isFollowing,
-  busy,
-  isAuthenticated,
-  onFollow,
-  isDemo,
-}: Props) {
+export default function UserCard({ user, isFollowing, busy, isAuthenticated, onFollow }: Props) {
   return (
     <article className={styles.personCard}>
-      <Link to={isDemo ? '/user/demo' : `/user/${user.id}`} className={styles.personLink}>
+      <Link to={`/user/${user.id}`} className={styles.personLink}>
         {user.avatar ? (
           <img
             src={user.avatar}
@@ -49,7 +41,7 @@ export default function UserCard({
         <ul className={styles.latestRecipes} aria-label="Latest recipes">
           {user.recipes.map((recipe) => (
             <li key={recipe.id}>
-              <Link to={isDemo ? '/recipe/test' : `/recipe/${recipe.id}`} aria-label={recipe.title}>
+              <Link to={`/recipe/${recipe.id}`} aria-label={recipe.title}>
                 {recipe.thumb ? <img src={recipe.thumb} alt="" loading="lazy" /> : recipe.title}
               </Link>
             </li>

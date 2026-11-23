@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Loader, PathInfo } from '../../components/Common';
+import PopularRecipes from '../../components/RecipeDetails/PopularRecipes';
+import RecipeIngredients from '../../components/RecipeDetails/RecipeIngredients';
+import RecipeMainInfo from '../../components/RecipeDetails/RecipeMainInfo';
+import RecipePreparation from '../../components/RecipeDetails/RecipePreparation';
 import { useAppSelector } from '../../redux/hooks';
 import {
   getPopularRecipes,
@@ -8,18 +13,11 @@ import {
   updateFavorite,
   type RecipeDetails,
 } from '../../services/recipeDetailsApi';
-import { PathInfo, Loader } from '../../components/Common';
-import RecipeMainInfo from '../../components/RecipeDetails/RecipeMainInfo';
-import RecipeIngredients from '../../components/RecipeDetails/RecipeIngredients';
-import RecipePreparation from '../../components/RecipeDetails/RecipePreparation';
-import PopularRecipes from '../../components/RecipeDetails/PopularRecipes';
-import { getDemoPopularRecipes, getDemoRecipe, isDemoRecipeId } from './demoRecipeData';
 import './recipe-page.css';
 
 export default function RecipePage() {
   const { id } = useParams<{ id: string }>();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuth);
-  const isDemo = isDemoRecipeId(id);
   const [recipe, setRecipe] = useState<RecipeDetails | null>(null);
   const [popular, setPopular] = useState<RecipeDetails[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,13 +29,7 @@ export default function RecipePage() {
 
   useEffect(() => {
     const controller = new AbortController();
-    if (isDemo) {
-      setRecipe(getDemoRecipe(id));
-      setError(null);
-      setFavoriteError(null);
-      setLoading(false);
-      return () => controller.abort();
-    }
+
     setRecipe(null);
     setError(null);
     setFavoriteError(null);
@@ -63,16 +55,10 @@ export default function RecipePage() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [id, isDemo]);
+  }, [id]);
 
   useEffect(() => {
     const controller = new AbortController();
-    if (isDemo) {
-      setPopular(getDemoPopularRecipes(id));
-      setPopularError(null);
-      setPopularLoading(false);
-      return () => controller.abort();
-    }
     setPopularError(null);
     setPopularLoading(true);
     getPopularRecipes(controller.signal)
@@ -88,15 +74,12 @@ export default function RecipePage() {
         if (!controller.signal.aborted) setPopularLoading(false);
       });
     return () => controller.abort();
-  }, [id, isDemo]);
+  }, [id]);
 
   const toggleFavorite = async () => {
     if (!recipe || saving) return;
     setFavoriteError(null);
-    if (isDemo) {
-      setRecipe((current) => (current ? { ...current, isFavorite: !current.isFavorite } : current));
-      return;
-    }
+
     if (!isAuthenticated) {
       setFavoriteError('Please sign in to add recipes to your favorites.');
       return;
@@ -140,7 +123,7 @@ export default function RecipePage() {
                 <RecipePreparation
                   steps={recipe.instructions}
                   isFavorite={recipe.isFavorite}
-                  isAuthenticated={isAuthenticated || isDemo}
+                  isAuthenticated={isAuthenticated}
                   isSaving={saving}
                   onToggleFavorite={toggleFavorite}
                 />

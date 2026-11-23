@@ -6,14 +6,13 @@ interface Props {
   recipe: ProfileRecipe;
   canRemove: boolean;
   busy: boolean;
-  isDemo: boolean;
   onRemove: (id: string) => void;
 }
-export default function RecipePreview({ recipe, canRemove, busy, isDemo, onRemove }: Props) {
+export default function RecipePreview({ recipe, canRemove, busy, onRemove }: Props) {
   return (
     <article className={styles.recipeCard}>
       <Link
-        to={isDemo ? '/recipe/test' : `/recipe/${recipe.id}`}
+        to={`/recipe/${recipe.id}`}
         className={styles.recipeImage}
         aria-label={`View ${recipe.title}`}
       >
@@ -25,7 +24,7 @@ export default function RecipePreview({ recipe, canRemove, busy, isDemo, onRemov
       </Link>
       <div className={styles.cardTitleRow}>
         <h3>
-          <Link to={isDemo ? '/recipe/test' : `/recipe/${recipe.id}`}>{recipe.title}</Link>
+          <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
         </h3>
         {canRemove && (
           <button
@@ -41,7 +40,7 @@ export default function RecipePreview({ recipe, canRemove, busy, isDemo, onRemov
         )}
       </div>
       <p className={styles.cardDescription}>{recipe.description}</p>
-      <Link className={styles.recipeAuthor} to={isDemo ? '/user/demo' : `/user/${recipe.ownerId}`}>
+      <Link className={styles.recipeAuthor} to={`/user/${recipe.ownerId}`}>
         By {recipe.ownerName}
       </Link>
     </article>

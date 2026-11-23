@@ -17,7 +17,6 @@ import {
   type ProfileUser,
   type ProfileUserCard,
 } from '../../services/userProfileApi';
-import { demoProfile, demoTab, isDemoUser } from './demoProfileData';
 import styles from './UserPage.module.css';
 
 const TABS: { id: ProfileTab; label: string }[] = [
@@ -27,6 +26,7 @@ const TABS: { id: ProfileTab; label: string }[] = [
   { id: 'following', label: 'Following' },
 ];
 const PAGE_SIZE = 6;
+
 const isRecipeTab = (tab: ProfileTab): tab is 'recipes' | 'favorites' =>
   tab === 'recipes' || tab === 'favorites';
 const isRecipe = (item: ProfileRecipe | ProfileUserCard): item is ProfileRecipe =>
@@ -39,8 +39,7 @@ export default function UserPage() {
   const authUser = useAppSelector((state) => state.auth.user);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuth);
   const dispatch = useAppDispatch();
-  const demo = isDemoUser(id);
-  const own = Boolean(id && (authUser?.id === id || (demo && id === 'demo-self')));
+  const own = Boolean(id && authUser?.id === id);
   const [profile, setProfile] = useState<ProfileUser | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -55,7 +54,7 @@ export default function UserPage() {
   const [following, setFollowing] = useState(false);
   const [followOverrides, setFollowOverrides] = useState<Record<string, boolean>>({});
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [deletedRecipeIds, setDeletedRecipeIds] = useState<string[]>([]);
+
   const avatarUrl = useRef<string | null>(null);
 
   useEffect(
@@ -72,7 +71,6 @@ export default function UserPage() {
     setAvatarPreview(null);
     setFollowing(false);
     setFollowOverrides({});
-    setDeletedRecipeIds([]);
     setTab('recipes');
     setPage(1);
     setProfileLoading(true);
@@ -82,12 +80,7 @@ export default function UserPage() {
       setProfileLoading(false);
       return () => controller.abort();
     }
-    if (demo) {
-      setProfile({ ...demoProfile, id: id === 'demo-self' ? 'demo-self' : demoProfile.id });
-      setFollowing(demoProfile.isFollowing);
-      setProfileLoading(false);
-      return () => controller.abort();
-    }
+
     getProfile(own ? 'current' : id, controller.signal)
       .then((user) => {
         if (!controller.signal.aborted) {
@@ -102,7 +95,7 @@ export default function UserPage() {
         if (!controller.signal.aborted) setProfileLoading(false);
       });
     return () => controller.abort();
-  }, [id, demo, own]);
+  }, [id, own]);
 
   useEffect(() => {
     if (!id) return;
@@ -110,9 +103,8 @@ export default function UserPage() {
     setItems([]);
     setTabLoading(true);
     setTabError(null);
-    const request = demo
-      ? Promise.resolve(demoTab(tab, page, PAGE_SIZE, deletedRecipeIds))
-      : getProfileTab(id, tab, page, PAGE_SIZE, controller.signal);
+    const request = getProfileTab(id, tab, page, PAGE_SIZE, controller.signal);
+
     request
       .then((data) => {
         if (!controller.signal.aborted) {
@@ -127,7 +119,7 @@ export default function UserPage() {
         if (!controller.signal.aborted) setTabLoading(false);
       });
     return () => controller.abort();
-  }, [id, demo, tab, page, deletedRecipeIds]);
+  }, [id, tab, page]);
 
   const changeTab = (next: ProfileTab) => {
     if (tab === next) return;
@@ -139,13 +131,14 @@ export default function UserPage() {
     setActionError(null);
   };
   const followProfile = async () => {
-    if (!profile || busy || (!isAuthenticated && !demo) || own) return;
+    if (!profile || busy || !isAuthenticated || own) return;
+
     const next = !following;
     setActionError(null);
     setFollowing(next);
     setBusy('profile-follow');
     try {
-      if (!demo) await setFollow(profile.id, next);
+      await setFollow(profile.id, next);
     } catch {
       setFollowing(!next);
       setActionError('Could not update follow status. Please try again.');
@@ -154,7 +147,8 @@ export default function UserPage() {
     }
   };
   const followPerson = async (userId: string) => {
-    if (busy || (!isAuthenticated && !demo) || userId === authUser?.id) return;
+    if (busy || !isAuthenticated || userId === authUser?.id) return;
+
     const person = items.find((item) => isPerson(item) && item.id === userId) as
       | ProfileUserCard
       | undefined;
@@ -165,7 +159,7 @@ export default function UserPage() {
     setFollowOverrides((current) => ({ ...current, [userId]: next }));
     setBusy(userId);
     try {
-      if (!demo) await setFollow(userId, next);
+      await setFollow(userId, next);
     } catch {
       setFollowOverrides((current) => ({ ...current, [userId]: previous }));
       setActionError('Could not update follow status. Please try again.');
@@ -178,11 +172,8 @@ export default function UserPage() {
     setActionError(null);
     setBusy(recipeId);
     try {
-      if (!demo) await deleteOwnRecipe(recipeId);
-      if (demo)
-        setDeletedRecipeIds((current) =>
-          current.includes(recipeId) ? current : [...current, recipeId],
-        );
+      await deleteOwnRecipe(recipeId);
+
       setItems((current) => current.filter((item) => item.id !== recipeId));
       setProfile(
         (current) => current && { ...current, recipesCount: Math.max(0, current.recipesCount - 1) },
@@ -209,10 +200,10 @@ export default function UserPage() {
     avatarUrl.current = nextUrl;
     setAvatarPreview(nextUrl);
     try {
-      const storedUrl = demo ? nextUrl : await uploadAvatar(file);
+      const storedUrl = await uploadAvatar(file);
       setProfile((current) => (current ? { ...current, avatar: storedUrl } : current));
-      if (!demo && authUser) dispatch(setUser({ ...authUser, avatar: storedUrl }));
-      if (!demo) setAvatarPreview(null);
+      if (authUser) dispatch(setUser({ ...authUser, avatar: storedUrl }));
+      setAvatarPreview(null);
     } catch {
       setAvatarPreview(null);
       setActionError('Avatar upload failed. Please try again.');
@@ -222,7 +213,7 @@ export default function UserPage() {
   };
 
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <div className="container">
         {profileLoading ? (
           <div className={styles.status}>
@@ -240,7 +231,7 @@ export default function UserPage() {
             <ProfileHeader
               user={profile}
               isOwn={own}
-              isAuthenticated={isAuthenticated || demo}
+              isAuthenticated={isAuthenticated}
               isFollowing={following}
               isBusy={busy !== null}
               onFollow={followProfile}
@@ -294,7 +285,6 @@ export default function UserPage() {
                         recipe={recipe}
                         canRemove={own && tab === 'recipes'}
                         busy={busy === recipe.id}
-                        isDemo={demo}
                         onRemove={removeRecipe}
                       />
                     ))}
@@ -306,10 +296,9 @@ export default function UserPage() {
                         key={user.id}
                         user={user}
                         isFollowing={followOverrides[user.id] ?? user.isFollowing}
-                        isAuthenticated={(isAuthenticated || demo) && user.id !== authUser?.id}
+                        isAuthenticated={isAuthenticated && user.id !== authUser?.id}
                         busy={busy === user.id}
                         onFollow={followPerson}
-                        isDemo={demo}
                       />
                     ))}
                   </div>
@@ -340,6 +329,6 @@ export default function UserPage() {
           </>
         )}
       </div>
-    </main>
+    </div>
   );
 }
