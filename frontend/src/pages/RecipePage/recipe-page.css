@@ -37,7 +37,6 @@
 .recipe-favorite-button { display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:16px 32px;border:1px solid var(--color-secondary);border-radius:30px;background:var(--color-white);color:var(--color-primary-light);font-size:16px;line-height:24px;font-weight:var(--font-weight-bold);letter-spacing:-.02em;text-transform:uppercase;cursor:pointer; }
 .recipe-favorite-button:hover { background:var(--color-primary);color:var(--color-white);border-color:var(--color-primary); }
 .recipe-favorite-button:disabled { opacity:.55;cursor:wait; }
-.recipe-favorite-hint { margin:12px 0 0; }
 .recipe-action-error { color:var(--color-error);font-size:14px; }
 .recipe-muted { color:var(--color-secondary);line-height:1.5; }
 .recipe-popular { margin-top:120px; }
