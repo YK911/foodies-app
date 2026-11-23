@@ -26,7 +26,6 @@
 }
 
 .light .container {
-  max-width: var(--container-width);
   padding: 0 var(--container-padding-desktop);
 }
 
