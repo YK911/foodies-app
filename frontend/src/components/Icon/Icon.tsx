@@ -8,7 +8,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
 export const Icon: React.FC<IconProps> = ({ name, size = 18, className = '', ...props }) => {
   return (
     <svg width={size} height={size} className={className} aria-hidden="true" {...props}>
-      <use href={`/sprite.svg#${name}`} />
+      <use href={`${import.meta.env.BASE_URL}sprite.svg#${name}`} />
     </svg>
   );
 };
