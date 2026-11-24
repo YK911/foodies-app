@@ -13,6 +13,7 @@ import fe05Seafood from '../../assets/images/seafood.webp';
 import fe05Side from '../../assets/images/side.webp';
 import fe05Starter from '../../assets/images/starter.webp';
 
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchLookups } from '../../redux/meta/operations';
 import { MainTitle, Subtitle } from '../Common';
@@ -20,8 +21,10 @@ import { Icon } from '../Icon/Icon';
 import { CATEGORY_PARAM } from '../Recipes';
 import css from './Categories.module.css';
 
+const MOBILE_CATEGORIES_LIMIT = 8;
+const DESKTOP_CATEGORIES_LIMIT = 11;
+
 // Original category photographs from the Foodies Figma design.
-// Preserve the curated order and responsive card proportions.
 const curated = [
   { name: 'Beef', image: fe05Beef, wide: false },
   { name: 'Breakfast', image: fe05Breakfast, wide: false },
@@ -40,14 +43,12 @@ export const Categories = () => {
   const dispatch = useAppDispatch();
   const categories = useAppSelector((state) => state.meta.categories);
   const [, setSearchParams] = useSearchParams();
+  const isMobile = useMediaQuery('(max-width: 767.98px)');
 
   useEffect(() => {
     void dispatch(fetchLookups());
   }, [dispatch]);
-  // Some API responses wrap the categories array in { data } or { categories }.
-  // Redux state is typed as Category[], but runtime JSON may still have those wrappers.
-  // Normalize before reading .length or calling .map so an unexpected response cannot
-  // crash the entire HomePage (see FE-05 browser regression).
+
   const cards = useMemo(() => {
     const extractCategories = (input: unknown): { name: string }[] => {
       let value: unknown = input;
@@ -71,13 +72,33 @@ export const Categories = () => {
 
     const apiCategories = extractCategories(categories);
     if (!apiCategories.length) return curated;
-    const available = new Set(apiCategories.map((item) => item.name.toLowerCase()));
-    const main = curated.filter((item) => available.has(item.name.toLowerCase()));
+
+    const apiByLower = new Map(apiCategories.map((item) => [item.name.toLowerCase(), item.name]));
+    const usedNames = new Set<string>();
+
+    const main = curated
+      .map((item) => {
+        const lower = item.name.toLowerCase();
+        const apiName =
+          apiByLower.get(lower) ?? (lower === 'desserts' ? apiByLower.get('dessert') : undefined);
+
+        if (!apiName) return null;
+        usedNames.add(apiName.toLowerCase());
+        return { name: apiName, image: item.image };
+      })
+      .filter((item): item is { name: string; image: string } => item !== null);
+
     const extras = apiCategories
-      .filter((item) => !curated.some((c) => c.name.toLowerCase() === item.name.toLowerCase()))
-      .map((item) => ({ name: item.name, image: fe05Miscellaneous, wide: false }));
+      .filter((item) => !usedNames.has(item.name.toLowerCase()))
+      .map((item) => ({ name: item.name, image: fe05Miscellaneous }));
+
     return [...main, ...extras];
   }, [categories]);
+
+  const visibleCards = cards.slice(
+    0,
+    isMobile ? MOBILE_CATEGORIES_LIMIT : DESKTOP_CATEGORIES_LIMIT,
+  );
 
   const choose = (name: string) => {
     setSearchParams((params) => {
@@ -90,6 +111,7 @@ export const Categories = () => {
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
   return (
     <section className={css.categories} aria-labelledby="categories-title">
       <div className="container">
@@ -102,11 +124,12 @@ export const Categories = () => {
             combine taste, style and the warm atmosphere of the kitchen.
           </Subtitle>
         </div>
+
         <div className={css.grid}>
-          {cards.map((item, index) => (
+          {visibleCards.map((item, index) => (
             <button
               key={item.name}
-              className={`${css.card} ${item.wide && index < 11 ? css.wide : ''} ${index >= 8 ? css.mobileHidden : ''}`}
+              className={css.card}
               type="button"
               onClick={() => choose(item.name)}
               aria-label={`Browse ${item.name} recipes`}
