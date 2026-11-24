@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { ProfileUserCard } from '../../services/userProfileApi';
+import { Icon } from '../Icon/Icon';
 import styles from '../../pages/UserPage/UserPage.module.css';
-
-import Arrow from '../../assets/icons/arrow-up-right.svg?react';
 
 interface Props {
   user: ProfileUserCard;
@@ -72,7 +71,7 @@ export default function UserCard({ user, isFollowing, busy, isAuthenticated, onF
         to={`/user/${user.id}`}
         aria-label={`Open ${user.name}'s profile`}
       >
-        <Arrow aria-hidden="true" />
+        <Icon name="arrow-up-right" aria-hidden="true" />
       </Link>
     </article>
   );
