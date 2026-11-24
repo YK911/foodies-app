@@ -8,9 +8,7 @@ import { fetchLookups } from '../../redux/meta/operations';
 import { createRecipe } from '../../services/recipesApi';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 import SelectField, { type SelectOption } from '../SelectField/SelectField';
-import PlusIcon from '../../assets/icons/plus-small.svg?react';
-import CloseIcon from '../../assets/icons/x.svg?react';
-import TrashIcon from '../../assets/icons/trash.svg?react';
+import { Icon } from '../Icon/Icon';
 import PhotoField from './PhotoField';
 import CountedTextarea from './CountedTextarea';
 import TimeCounter from './TimeCounter';
@@ -343,7 +341,7 @@ export const AddRecipeForm = () => {
 
                 <button type="button" className={css.outlineButton} onClick={addIngredient}>
                   Add ingredient
-                  <PlusIcon className={css.buttonIcon} aria-hidden="true" />
+                  <Icon name="plus-small" className={css.buttonIcon} aria-hidden="true" />
                 </button>
 
                 {values.ingredients.length > 0 && (
@@ -373,7 +371,7 @@ export const AddRecipeForm = () => {
                             aria-label={`Remove ${name}`}
                             onClick={() => removeIngredient(id)}
                           >
-                            <CloseIcon aria-hidden="true" />
+                            <Icon name="x" aria-hidden="true" />
                           </button>
                         </li>
                       );
@@ -410,7 +408,7 @@ export const AddRecipeForm = () => {
                     disabled={isSubmitting}
                     onClick={clearForm}
                   >
-                    <TrashIcon className={css.trashIcon} aria-hidden="true" />
+                    <Icon name="trash" className={css.trashIcon} aria-hidden="true" />
                   </button>
                   <button type="submit" className={css.publishButton} disabled={isSubmitting}>
                     {isSubmitting ? 'Publishing…' : 'Publish'}

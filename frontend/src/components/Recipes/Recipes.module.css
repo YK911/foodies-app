@@ -32,9 +32,6 @@
 .backIcon {
   width: 16px;
   height: 16px;
-}
-
-.backIcon path {
   stroke: currentColor;
 }
 

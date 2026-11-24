@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { ProfileRecipe } from '../../services/userProfileApi';
+import { Icon } from '../Icon/Icon';
 import styles from '../../pages/UserPage/UserPage.module.css';
-
-import Arrow from '../../assets/icons/arrow-up-right.svg?react';
-import Trash from '../../assets/icons/trash.svg?react';
 
 interface Props {
   recipe: ProfileRecipe;
@@ -38,7 +36,7 @@ export default function RecipePreview({ recipe, canRemove, favorite, busy, onRem
           className={styles.iconButton}
           aria-label={`Open ${recipe.title}`}
         >
-          <Arrow aria-hidden="true" />
+          <Icon name="arrow-up-right" aria-hidden="true" />
         </Link>
         {canRemove && (
           <button
@@ -50,7 +48,7 @@ export default function RecipePreview({ recipe, canRemove, favorite, busy, onRem
             }
             onClick={() => onRemove(recipe.id)}
           >
-            <Trash aria-hidden="true" />
+            <Icon name="trash" aria-hidden="true" />
           </button>
         )}
       </div>

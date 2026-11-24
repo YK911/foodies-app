@@ -23,10 +23,7 @@ export const Hero = () => {
     <section className={css.hero} aria-labelledby="hero-title">
       <div className="container">
         <div className={css.copy}>
-          <h1 id="hero-title">
-            Improve your
-            <br className={css.desktopBreak} /> culinary talents
-          </h1>
+          <h1 id="hero-title">Improve&nbsp;your culinary talents</h1>
           <p>
             Amazing recipes for beginners in the world of cooking, enveloping you in the aromas and
             tastes of various cuisines.
@@ -37,10 +34,10 @@ export const Hero = () => {
         </div>
         <div className={css.heroPhotos} aria-hidden="true">
           <div className={css.photoSmall}>
-            <img src={heroSmall} alt="" loading="eager" decoding="async" />
+            <img src={heroSmall} alt="" loading="eager" decoding="async" width="77" height="70" />
           </div>
           <div className={css.photoMain}>
-            <img src={heroMain} alt="" loading="eager" decoding="async" />
+            <img src={heroMain} alt="" loading="eager" decoding="async" width="190" height="172" />
           </div>
         </div>
       </div>

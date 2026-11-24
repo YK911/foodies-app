@@ -84,6 +84,7 @@
 }
 
 .chevron {
+  stroke: #050505;
   flex-shrink: 0;
   transition: transform 0.2s ease;
 }
