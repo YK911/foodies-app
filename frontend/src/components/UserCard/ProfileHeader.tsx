@@ -2,6 +2,8 @@ import type { ChangeEvent } from 'react';
 import styles from '../../pages/UserPage/UserPage.module.css';
 import type { ProfileUser } from '../../services/userProfileApi';
 import { MainTitle } from '../Common';
+import { useAppDispatch } from '../../redux/hooks';
+import { openLogOutModal } from '../../redux/ui/uiSlice';
 
 interface Props {
   user: ProfileUser;
@@ -33,6 +35,7 @@ export default function ProfileHeader({
   onFollow,
   onUpload,
 }: Props) {
+  const dispatch = useAppDispatch();
   const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) onUpload(file);
@@ -102,6 +105,15 @@ export default function ProfileHeader({
           </button>
         )}
         {!isOwn && !isAuthenticated && <p className={styles.note}>Sign in to follow this user.</p>}
+        {isOwn && (
+          <button
+            className={styles.mobileLogout}
+            type="button"
+            onClick={() => dispatch(openLogOutModal())}
+          >
+            Log out
+          </button>
+        )}
       </div>
     </section>
   );

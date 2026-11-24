@@ -635,3 +635,43 @@
     display: flex;
   }
 }
+
+/* UI-FIGMA-FIX-2026 */
+/* Own-profile log out action follows the mobile profile card in the Figma design. */
+.mobileLogout { display: none; }
+@media (max-width: 767px) {
+  .profileLayout .profileHeader { position: relative; }
+  .profileLayout .avatarWrap { width: 80px; height: 80px; }
+  .profileLayout .avatarFallback { font-size: 28px; }
+  .profileLayout .profileName { margin-bottom: 10px; }
+  .profileLayout .stats {
+    justify-items: start;
+    text-align: left;
+    max-width: 205px;
+    margin: 16px auto 0;
+  }
+  .profileLayout .stats div { min-width: 0; }
+  .mobileLogout {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 24px;
+    border-radius: 28px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: var(--font-weight-bold);
+  }
+  .mobileLogout:hover,
+  .mobileLogout:focus-visible { background: var(--color-primary-light); }
+  .profileLayout .recipeCard { grid-template-columns: 75px minmax(0, 1fr) auto; }
+  .profileLayout .actions { grid-column: 3; grid-row: 1; align-self: start; }
+  .profileLayout .iconButton { width: 32px; height: 32px; }
+  .profileLayout .actions { flex-wrap: wrap; max-width: 68px; }
+  .profileLayout .cardTitleRow h3 { overflow-wrap: anywhere; }
+}
+@media (max-width: 359px) {
+  .profileLayout .recipeCard { grid-template-columns: 65px minmax(0, 1fr) auto; gap: 8px; }
+  .profileLayout .recipeImage { width: 65px; height: 65px; }
+}

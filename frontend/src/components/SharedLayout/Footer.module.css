@@ -99,3 +99,12 @@
     font-size: 14px;
   }
 }
+
+/* UI-FIGMA-FIX-2026 */
+/* Avoid viewport-width decorative rule causing horizontal overflow/late movement. */
+.top::after { left: 0; transform: none; width: 100%; }
+.socialLink:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+@media (max-width: 767px) {
+  .top { padding-bottom: 24px; }
+  .bottom { padding: 24px 0 0; }
+}

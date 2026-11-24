@@ -173,3 +173,8 @@
   max-width: 531px;
   margin-top: 20px;
 }
+
+/* UI-FIGMA-FIX-2026 */
+/* Make aspect-cropped category photographs remain stable during loading. */
+.card img { display: block; }
+.allCategories:focus-visible { outline-offset: 4px; }

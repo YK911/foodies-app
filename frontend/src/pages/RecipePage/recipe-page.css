@@ -471,3 +471,31 @@
     transition: none;
   }
 }
+
+/* UI-FIGMA-FIX-2026 */
+/* Same SVG action icon and hover pattern as the shared RecipeCard. */
+.recipe-popular-arrow {
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.recipe-popular-arrow svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+}
+.recipe-popular-arrow:hover,
+.recipe-popular-arrow:focus-visible {
+  border-color: var(--color-primary);
+}
+/* Keep ingredient names legible even for longer translated labels. */
+.recipe-ingredient-name,
+.recipe-ingredient-amount { overflow-wrap: anywhere; }
+@media (min-width: 601px) and (max-width: 767px) {
+  .recipe-info { grid-template-columns: minmax(0, 1fr); }
+  .recipe-hero-media { height: auto; aspect-ratio: 551 / 400; }
+}
+@media (max-width: 600px) {
+  .recipe-ingredient { min-width: 0; }
+  .recipe-ingredient-text { min-width: 0; }
+  .recipe-popular-arrow { width: 36px; height: 36px; }
+}

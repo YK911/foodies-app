@@ -332,3 +332,11 @@
     max-width: 76px;
   }
 }
+
+/* UI-FIGMA-FIX-2026 */
+/* Keep both header variants legible at the smallest supported viewport. */
+@media (max-width: 359px) {
+  .container { gap: 6px; }
+  .signInBtn, .signUpBtn { padding: 0 10px; }
+}
+.mobileMenu { overflow-y: auto; }

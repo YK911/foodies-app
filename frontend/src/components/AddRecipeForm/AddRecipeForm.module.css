@@ -693,3 +693,15 @@
     width: 551px;
   }
 }
+
+/* UI-FIGMA-FIX-2026 */
+/* Maintain predictable form geometry and accessible focus at all breakpoints. */
+.form { min-width: 0; }
+.fieldsColumn { min-width: 0; }
+.form input:focus-visible,
+.form textarea:focus-visible,
+.form button:focus-visible { outline: 2px solid var(--color-main); outline-offset: 3px; }
+@media (max-width: 767px) {
+  .ingredientCard { min-width: 0; }
+  .ingredientName, .ingredientMeasure { overflow-wrap: anywhere; }
+}

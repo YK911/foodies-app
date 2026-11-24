@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Icon } from '../Icon/Icon';
 import type { RecipeDetails } from '../../services/recipeDetailsApi';
 interface Props { recipes: RecipeDetails[]; isLoading: boolean; error: string | null }
 export default function PopularRecipes({ recipes, isLoading, error }: Props) {
@@ -21,7 +22,7 @@ export default function PopularRecipes({ recipes, isLoading, error }: Props) {
                 {recipe.owner.avatar ? <img src={recipe.owner.avatar} alt="" loading="lazy" decoding="async" /> : <span className="recipe-popular-avatar">{recipe.owner.name.charAt(0).toUpperCase()}</span>}
                 <span>{recipe.owner.name}</span>
               </span>
-              <Link className="recipe-popular-arrow" to={`/recipe/${encodeURIComponent(recipe.id)}`} aria-label={`Open ${recipe.title}`}>↗</Link>
+              <Link className="recipe-popular-arrow" to={`/recipe/${encodeURIComponent(recipe.id)}`} aria-label={`Open ${recipe.title}`}><Icon name="arrow-up-right" aria-hidden="true" /></Link>
             </div>
           </div>
         </article>)}

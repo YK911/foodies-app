@@ -204,3 +204,11 @@
     }
   }
 }
+
+/* UI-FIGMA-FIX-2026 */
+/* Desktop hero photograph frames measured in original Figma. */
+@media (min-width: 1440px) {
+  .heroPhotos { width: 502px; height: 330px; }
+  .heroPhotos .photoMain { width: 352px; height: 330px; }
+  .heroPhotos .photoSmall { width: 148px; height: 138px; }
+}
