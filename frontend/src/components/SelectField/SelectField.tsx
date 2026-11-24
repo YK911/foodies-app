@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
+import { Icon } from '../Icon/Icon';
 import ChevronIcon from '../../assets/icons/chevron-down.svg?react';
 import css from './SelectField.module.css';
 
@@ -189,7 +190,7 @@ export const SelectField = ({
             aria-label={isOpen ? 'Hide options' : 'Show options'}
             onClick={() => (isOpen ? close() : open())}
           >
-            <ChevronIcon className={css.chevron} aria-hidden="true" />
+            <Icon name="chevron-down" className={css.chevron} aria-hidden="true" />
           </button>
         </div>
       ) : (
@@ -203,7 +204,7 @@ export const SelectField = ({
           <span className={clsx(css.value, !selected && css.placeholder)}>
             {selected?.label ?? placeholder}
           </span>
-          <ChevronIcon className={css.chevron} aria-hidden="true" />
+          <Icon name="chevron-down" className={css.chevron} aria-hidden="true" />
         </button>
       )}
 

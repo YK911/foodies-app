@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import HeartIcon from '../../assets/icons/heart.svg?react';
-import ArrowUpRightIcon from '../../assets/icons/arrow-up-right.svg?react';
+import { Icon } from '../Icon/Icon';
 import type { RecipeListItem } from '../../services/recipesApi';
 import css from './RecipeCard.module.css';
 
@@ -66,10 +65,10 @@ export const RecipeCard = ({
               aria-pressed={isFavorite}
               aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
             >
-              <HeartIcon className={css.icon} aria-hidden="true" />
+              <Icon name="heart" className={css.icon} aria-hidden="true" />
             </button>
             <Link to={recipePath} className={css.iconButton} aria-label={`Open recipe ${title}`}>
-              <ArrowUpRightIcon className={css.icon} aria-hidden="true" />
+              <Icon name="arrow-up-right" className={css.icon} aria-hidden="true" />
             </Link>
           </div>
         </div>

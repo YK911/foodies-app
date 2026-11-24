@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import ArrowLeftIcon from '../../assets/icons/arrow-left.svg?react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { fetchRecipes, type RecipesPage } from '../../services/recipesApi';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 import { Loader, MainTitle, Subtitle } from '../Common';
+import { Icon } from '../Icon/Icon';
 import { RecipeFilters, type RecipeFiltersValue } from '../RecipeFilters';
 import { RecipeList } from '../RecipeList';
 import { RecipePagination } from '../RecipePagination';
-import { fetchRecipes, type RecipesPage } from '../../services/recipesApi';
-import { getErrorMessage } from '../../utils/getErrorMessage';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
 import css from './Recipes.module.css';
 
 // URL search params are the single source of truth, so filters and page survive reloads
@@ -146,7 +146,7 @@ export const Recipes = () => {
       <div className="container">
         <div className={css.heading}>
           <button type="button" className={css.backButton} onClick={handleBack}>
-            <ArrowLeftIcon className={css.backIcon} aria-hidden="true" />
+            <Icon name="arrow-left" className={css.backIcon} aria-hidden="true" />
             Back
           </button>
           <MainTitle as="h2" id="recipes-title">

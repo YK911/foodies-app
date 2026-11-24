@@ -3,9 +3,8 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { openAuthModal, openLogOutModal } from '../../redux/ui/uiSlice';
-import ChevronDownIcon from '../../assets/icons/chevron-down.svg?react';
-import ArrowUpRightIcon from '../../assets/icons/arrow-up-right.svg?react';
-import CloseIcon from '../../assets/icons/x.svg?react';
+import { Icon } from '../Icon/Icon';
+
 import css from './Header.module.css';
 
 export const Header = () => {
@@ -121,7 +120,8 @@ export const Header = () => {
                     </span>
                   )}
                   <span className={css.userName}>{user?.name || 'Profile'}</span>
-                  <ChevronDownIcon
+                  <Icon
+                    name="chevron-down"
                     className={clsx(css.chevron, isDropdownOpen && css.chevronOpen)}
                     aria-hidden="true"
                   />
@@ -144,7 +144,7 @@ export const Header = () => {
                       onClick={handleOpenLogOut}
                     >
                       <span>Log out</span>
-                      <ArrowUpRightIcon className={css.dropdownIcon} aria-hidden="true" />
+                      <Icon name="arrow-up-right" className={css.dropdownIcon} aria-hidden="true" />
                     </button>
                   </div>
                 )}
@@ -201,7 +201,7 @@ export const Header = () => {
               onClick={() => setIsMobileMenuOpen(false)}
               aria-label="Close navigation menu"
             >
-              <CloseIcon className={css.mobileCloseIcon} aria-hidden="true" />
+              <Icon name="x" className={css.mobileCloseIcon} aria-hidden="true" />
             </button>
           </div>
 

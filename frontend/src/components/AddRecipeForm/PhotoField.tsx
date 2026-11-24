@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import clsx from 'clsx';
-import CaptureFrameIcon from '../../assets/icons/capture-frame.svg?react';
-import CameraIcon from '../../assets/icons/camera.svg?react';
+import { Icon } from '../Icon/Icon';
 import css from './AddRecipeForm.module.css';
 
 export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -69,8 +68,8 @@ export const PhotoField = ({ id, file, error, onChange }: PhotoFieldProps) => {
       ) : (
         <label htmlFor={id} className={clsx(css.dropzone, error && css.dropzoneInvalid)}>
           <span className={css.uploadIcon} aria-hidden="true">
-            <CaptureFrameIcon />
-            <CameraIcon className={css.cameraIcon} />
+            <Icon name="capture-frame" size={64} />
+            <Icon name="camera" className={css.cameraIcon} />
           </span>
           <span className={css.uploadLink}>Upload a photo</span>
         </label>

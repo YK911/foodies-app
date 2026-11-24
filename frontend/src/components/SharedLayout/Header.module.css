@@ -156,9 +156,10 @@
 }
 
 .chevron {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   transition: transform var(--transition-duration) var(--transition-timing-function);
+  stroke: white;
 }
 
 .chevronOpen {
