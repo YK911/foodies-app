@@ -151,9 +151,6 @@
   .card:nth-child(n) {
     grid-column: auto;
   }
-  .card.mobileHidden {
-    display: none;
-  }
   .cardActions {
     left: 16px;
     bottom: 16px;
