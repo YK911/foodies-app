@@ -1,7 +1,6 @@
 .page {
   min-height: 100vh;
   padding: 110px 0 100px;
-  background: var(--color-background);
   color: var(--color-primary);
 }
 .breadcrumb {
@@ -306,7 +305,6 @@
   }
   .personCard {
     display: grid;
-    grid-template-columns: minmax(180px, 1fr) auto minmax(42px, 1fr);
   }
   .personCard > .iconButton {
     grid-column: 3;
@@ -452,9 +450,15 @@
   gap: 16px;
   margin-bottom: 40px;
 }
-.profileIntro .breadcrumb { margin: 0 0 24px; }
-.profileIntroTitle { margin: 0; }
-.profileIntroSubtitle { max-width: 443px; }
+.profileIntro .breadcrumb {
+  margin: 0 0 24px;
+}
+.profileIntroTitle {
+  margin: 0;
+}
+.profileIntroSubtitle {
+  max-width: 443px;
+}
 .profileLayout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -474,15 +478,28 @@
   background: #fff;
   text-align: center;
 }
-.profileLayout .avatarWrap { width: 120px; height: 120px; }
-.profileLayout .avatarFallback { font-size: 36px; }
-.profileLayout .profileDetails { width: 100%; flex: none; min-width: 0; }
+.profileLayout .avatarWrap {
+  width: 120px;
+  height: 120px;
+}
+.profileLayout .avatarFallback {
+  font-size: 36px;
+}
+.profileLayout .profileDetails {
+  width: 100%;
+  flex: none;
+  min-width: 0;
+}
 .profileLayout .profileName {
   font-size: 20px;
   line-height: 24px;
   margin: 0 0 20px;
 }
-.profileLayout .email { font-size: 14px; line-height: 24px; overflow-wrap: anywhere; }
+.profileLayout .email {
+  font-size: 14px;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+}
 .profileLayout .stats {
   display: grid;
   grid-template-columns: 1fr;
@@ -492,15 +509,42 @@
   margin: 14px auto 24px;
   text-align: left;
 }
-.profileLayout .stats div { display: flex; flex-direction: row; align-items: baseline; gap: 8px; }
-.profileLayout .stats dt { order: 0; font-size: 13px; }
-.profileLayout .stats dd { order: 1; font-size: 16px; line-height: 24px; }
-.profileLayout .darkButton { width: 100%; min-height: 56px; }
-.profileLayout .tabs { gap: 40px; margin: 0; overflow-x: auto; }
-.profileLayout .tab { padding: 0 0 14px; font-size: 18px; line-height: 24px; }
-.profileLayout .panel { padding-top: 40px; }
+.profileLayout .stats div {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+.profileLayout .stats dt {
+  order: 0;
+  font-size: 13px;
+}
+.profileLayout .stats dd {
+  order: 1;
+  font-size: 16px;
+  line-height: 24px;
+}
+.profileLayout .darkButton {
+  width: 100%;
+  min-height: 56px;
+}
+.profileLayout .tabs {
+  gap: 40px;
+  margin: 0;
+  overflow-x: auto;
+}
+.profileLayout .tab {
+  padding: 0 0 14px;
+  font-size: 18px;
+  line-height: 24px;
+}
+.profileLayout .panel {
+  padding-top: 40px;
+}
 .profileLayout .recipeCard,
-.profileLayout .personCard { min-width: 0; }
+.profileLayout .personCard {
+  min-width: 0;
+}
 .profileLayout .recipeCard {
   display: grid;
   grid-template-columns: 100px minmax(0, 1fr) auto;
@@ -509,33 +553,85 @@
   padding: 0;
   border: 0;
 }
-.profileLayout .recipesGrid { gap: 40px; }
-.profileLayout .recipeCard + .recipeCard { border: 0; }
-.profileLayout .recipeImage { width: 100px; height: 100px; border-radius: 15px; }
-.profileLayout .cardTitleRow h3 { font-size: 20px; line-height: 24px; }
+.profileLayout .recipesGrid {
+  gap: 40px;
+}
+.profileLayout .recipeCard + .recipeCard {
+  border: 0;
+}
+.profileLayout .recipeImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 15px;
+}
+.profileLayout .cardTitleRow h3 {
+  font-size: 20px;
+  line-height: 24px;
+}
 .profileLayout .cardDescription {
   margin-top: 10px;
   font-size: 14px;
   line-height: 1.45;
   -webkit-line-clamp: 3;
 }
-.profileLayout .actions { gap: 4px; margin: 0; }
-.profileLayout .content { min-width: 0; }
+.profileLayout .actions {
+  gap: 4px;
+  margin: 0;
+}
+.profileLayout .content {
+  min-width: 0;
+}
 @media (min-width: 1101px) {
-  .profileLayout { grid-template-columns: minmax(0, 394px) minmax(0, 846px); gap: 40px; }
+  .profileLayout {
+    grid-template-columns: minmax(0, 394px) minmax(0, 846px);
+    gap: 40px;
+  }
 }
 @media (max-width: 767px) {
-  .profileIntro { gap: 12px; margin-bottom: 32px; }
-  .profileIntro .breadcrumb { margin-bottom: 12px; }
-  .profileLayout { gap: 32px; }
-  .profileLayout .profileHeader { padding: 32px 18px; border-radius: 24px; }
-  .profileLayout .tabs { gap: 20px; }
-  .profileLayout .tab { font-size: 14px; white-space: nowrap; }
-  .profileLayout .recipeCard { grid-template-columns: 75px minmax(0, 1fr); gap: 12px; }
-  .profileLayout .recipeImage { width: 75px; height: 75px; }
-  .profileLayout .cardTitleRow h3 { font-size: 15px; }
-  .profileLayout .cardDescription { font-size: 12px; -webkit-line-clamp: 2; }
-  .profileLayout .actions { grid-column: 2; justify-self: end; }
-  .profileLayout .recipesGrid { gap: 28px; }
-  .profileLayout .personCard { display: flex; }
+  .profileIntro {
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .profileIntro .breadcrumb {
+    margin-bottom: 12px;
+  }
+  .profileLayout {
+    gap: 32px;
+  }
+  .profileLayout .profileHeader {
+    padding: 32px 18px;
+    border-radius: 24px;
+  }
+  .profileLayout .tabs {
+    gap: 20px;
+  }
+  .profileLayout .tab {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .profileLayout .recipeCard {
+    grid-template-columns: 75px minmax(0, 1fr);
+    gap: 12px;
+  }
+  .profileLayout .recipeImage {
+    width: 75px;
+    height: 75px;
+  }
+  .profileLayout .cardTitleRow h3 {
+    font-size: 15px;
+  }
+  .profileLayout .cardDescription {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
+  }
+  .profileLayout .actions {
+    grid-column: 2;
+    justify-self: end;
+  }
+  .profileLayout .recipesGrid {
+    gap: 28px;
+  }
+  .profileLayout .personCard {
+    display: flex;
+  }
 }
